@@ -8,7 +8,7 @@ import com.example.cookbook.data.entities.*
 interface CookDao {
 
     //---TAG-----------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM tag")
+    @Query("SELECT id, name  FROM tag ORDER BY name")
     fun getDataTag(): LiveData<List<Data>>
 
     @Query("SELECT * FROM tag")
@@ -24,7 +24,7 @@ interface CookDao {
     suspend fun deleteIdTag(id: Int)
 
     //---DISH----------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM dish")
+    @Query("SELECT id, name  FROM dish ORDER BY name")
     fun getDataDish(): LiveData<List<Data>>
 
     @Query("SELECT * FROM dish")
@@ -40,7 +40,7 @@ interface CookDao {
     suspend fun deleteIdDish(id: Int)
 
     //---RECIPE-------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM recipe")
+    @Query("SELECT id, name  FROM recipe ORDER BY name")
     fun getDataRecipe(): LiveData<List<Data>>
 
     @Query("SELECT * FROM recipe")
@@ -56,7 +56,7 @@ interface CookDao {
     suspend fun deleteIdRecipe(id: Int)
 
     //---INGREDIENT----------------------------------------------------------------------
-    @Query("SELECT id, name  FROM ingredient")
+    @Query("SELECT id, name  FROM ingredient ORDER BY name")
     fun getDataIngredient(): LiveData<List<Data>>
 
     @Query("SELECT * FROM ingredient")
@@ -72,7 +72,7 @@ interface CookDao {
     suspend fun deleteIdIngredient(id: Int)
 
     //---MEASURE-------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM measure")
+    @Query("SELECT id, name  FROM measure ORDER BY name")
     fun getDataMeasure(): LiveData<List<Data>>
 
     @Query("SELECT * FROM measure")
@@ -88,7 +88,7 @@ interface CookDao {
     suspend fun deleteIdMeasure(id: Int)
 
     //---AUTHOR--------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM author")
+    @Query("SELECT id, name  FROM author ORDER BY name")
     fun getDataAuthor(): LiveData<List<Data>>
 
     @Query("SELECT * FROM author")

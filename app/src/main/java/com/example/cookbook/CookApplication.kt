@@ -11,6 +11,7 @@ lateinit var tabrText: Array<String>
 lateinit var tabnText: Array<String>
 
 var indexTab = 0
+var dialogShow = false
 
 class CookApplication : Application() {
     private val database by lazy { CookDataBase.getDatabase(this) }
