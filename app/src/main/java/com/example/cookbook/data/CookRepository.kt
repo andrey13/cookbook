@@ -1,31 +1,67 @@
 package com.example.cookbook.data
 
 import androidx.lifecycle.LiveData
+import com.example.cookbook.data.entities.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CookRepository(private val cookDao: CookDao) {
 
-    val allDishes : LiveData<List<Dish>> = cookDao.getAll()
+    val allDataTag : LiveData<List<Data>> = cookDao.getDataTag()
+    val allDataDishes : LiveData<List<Data>> = cookDao.getDataDish()
+    val allDataReceipe : LiveData<List<Data>> = cookDao.getDataReceipe()
+    val allDataIngredient : LiveData<List<Data>> = cookDao.getDataIngredient()
+    val allDataMeasure : LiveData<List<Data>> = cookDao.getDataMeasure()
+    val allDataAutor : LiveData<List<Data>> = cookDao.getDataAutor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    fun insert(dish: Dish) {
+    fun insertTag(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            cookDao.insert(dish)
+            cookDao.insertTag(name)
         }
     }
 
-    fun deleteAll() {
+    fun insertDish(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            cookDao.deleteAll()
+            cookDao.insertDish(name)
         }
     }
 
-    fun deleteId(id: Int) {
+    fun insertReceipe(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            cookDao.deleteId(id)
+            cookDao.insertReceipe(name)
+        }
+    }
+
+    fun insertIngredient(name: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            cookDao.insertIngredient(name)
+        }
+    }
+
+    fun insertMeasure(name: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            cookDao.insertMeasure(name)
+        }
+    }
+
+    fun insertAutor(name: String) {
+        coroutineScope.launch(Dispatchers.IO) {
+            cookDao.insertAutor(name)
+        }
+    }
+
+    fun deleteAllDish() {
+        coroutineScope.launch(Dispatchers.IO) {
+            cookDao.deleteAllDish()
+        }
+    }
+
+    fun deleteIdDish(id: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            cookDao.deleteIdDish(id)
         }
     }
 
