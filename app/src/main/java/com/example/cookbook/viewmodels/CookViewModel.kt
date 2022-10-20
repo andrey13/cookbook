@@ -10,10 +10,10 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
     val allDataTag : LiveData<List<Data>> = repository.allDataTag
     val allDataDish: LiveData<List<Data>> = repository.allDataDishes
-    val allDataReceipe : LiveData<List<Data>> = repository.allDataReceipe
+    val allDataRecipe : LiveData<List<Data>> = repository.allDataRecipe
     val allDataIngredient : LiveData<List<Data>> = repository.allDataIngredient
     val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure
-    val allDataAutor : LiveData<List<Data>> = repository.allDataAutor
+    val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor
 
     fun insertTag(name: String) {
         repository.insertTag(name)
@@ -23,20 +23,20 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
         repository.insertDish(name)
     }
 
-    fun insertReceipe(name: String) {
-        repository.insertReceipe(name)
+    fun insertRecipe(name: String) {
+        repository.insertRecipe(name)
     }
 
     fun insertIngredient(name: String) {
         repository.insertIngredient(name)
     }
 
-    fun insertaMeasure(name: String) {
+    fun insertMeasure(name: String) {
         repository.insertMeasure(name)
     }
 
-    fun insertAutor(name: String) {
-        repository.insertAutor(name)
+    fun insertAuthor(name: String) {
+        repository.insertAuthor(name)
     }
 
     fun deleteAll() {

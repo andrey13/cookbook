@@ -10,10 +10,10 @@ class CookRepository(private val cookDao: CookDao) {
 
     val allDataTag : LiveData<List<Data>> = cookDao.getDataTag()
     val allDataDishes : LiveData<List<Data>> = cookDao.getDataDish()
-    val allDataReceipe : LiveData<List<Data>> = cookDao.getDataReceipe()
+    val allDataRecipe : LiveData<List<Data>> = cookDao.getDataRecipe()
     val allDataIngredient : LiveData<List<Data>> = cookDao.getDataIngredient()
     val allDataMeasure : LiveData<List<Data>> = cookDao.getDataMeasure()
-    val allDataAutor : LiveData<List<Data>> = cookDao.getDataAutor()
+    val allDataAuthor : LiveData<List<Data>> = cookDao.getDataAuthor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -29,9 +29,9 @@ class CookRepository(private val cookDao: CookDao) {
         }
     }
 
-    fun insertReceipe(name: String) {
+    fun insertRecipe(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            cookDao.insertReceipe(name)
+            cookDao.insertRecipe(name)
         }
     }
 
@@ -47,9 +47,9 @@ class CookRepository(private val cookDao: CookDao) {
         }
     }
 
-    fun insertAutor(name: String) {
+    fun insertAuthor(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
-            cookDao.insertAutor(name)
+            cookDao.insertAuthor(name)
         }
     }
 

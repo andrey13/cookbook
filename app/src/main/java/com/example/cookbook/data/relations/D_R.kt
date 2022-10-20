@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "d_r",
     indices = [
-        Index(value = ["id_dish", "id_receipe"]),
-        Index(value = ["id_receipe", "id_dish"]),
+        Index(value = ["id_dish", "id_recipe"]),
+        Index(value = ["id_recipe", "id_dish"]),
     ]
 )
 class D_R (
@@ -21,7 +21,7 @@ class D_R (
     @ColumnInfo(name = "id_dish")
     val id_dish: Int = 0,
 
-    @ColumnInfo(name = "id_receipe")
-    val id_receipe: Int = 0
+    @ColumnInfo(name = "id_recipe")
+    val id_recipe: Int = 0
 
 )

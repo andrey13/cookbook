@@ -7,6 +7,22 @@ import com.example.cookbook.data.entities.*
 @Dao
 interface CookDao {
 
+    //---TAG-----------------------------------------------------------------------------
+    @Query("SELECT id, name  FROM tag")
+    fun getDataTag(): LiveData<List<Data>>
+
+    @Query("SELECT * FROM tag")
+    fun getAllTag(): LiveData<List<Tag>>
+
+    @Query("INSERT INTO tag (name) VALUES (:name)")
+    suspend fun insertTag(name: String)
+
+    @Query("DELETE FROM tag")
+    suspend fun deleteAllTag()
+
+    @Query("DELETE FROM tag WHERE id = :id")
+    suspend fun deleteIdTag(id: Int)
+
     //---DISH----------------------------------------------------------------------------
     @Query("SELECT id, name  FROM dish")
     fun getDataDish(): LiveData<List<Data>>
@@ -23,21 +39,21 @@ interface CookDao {
     @Query("DELETE FROM dish WHERE id = :id")
     suspend fun deleteIdDish(id: Int)
 
-    //---TAG-----------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM tag")
-    fun getDataTag(): LiveData<List<Data>>
+    //---RECIPE-------------------------------------------------------------------------
+    @Query("SELECT id, name  FROM recipe")
+    fun getDataRecipe(): LiveData<List<Data>>
 
-    @Query("SELECT * FROM tag")
-    fun getAllTag(): LiveData<List<Tag>>
+    @Query("SELECT * FROM recipe")
+    fun getAllRecipe(): LiveData<List<Recipe>>
 
-    @Query("INSERT INTO tag (name) VALUES (:name)")
-    suspend fun insertTag(name: String)
+    @Query("INSERT INTO recipe (name) VALUES (:name)")
+    suspend fun insertRecipe(name: String)
 
-    @Query("DELETE FROM tag")
-    suspend fun deleteAllTag()
+    @Query("DELETE FROM recipe")
+    suspend fun deleteAllRecipe()
 
-    @Query("DELETE FROM tag WHERE id = :id")
-    suspend fun deleteIdTag(id: Int)
+    @Query("DELETE FROM recipe WHERE id = :id")
+    suspend fun deleteIdRecipe(id: Int)
 
     //---INGREDIENT----------------------------------------------------------------------
     @Query("SELECT id, name  FROM ingredient")
@@ -55,22 +71,6 @@ interface CookDao {
     @Query("DELETE FROM ingredient WHERE id = :id")
     suspend fun deleteIdIngredient(id: Int)
 
-    //---RECEIPE-------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM receipe")
-    fun getDataReceipe(): LiveData<List<Data>>
-
-    @Query("SELECT * FROM receipe")
-    fun getAllReceipe(): LiveData<List<Receipe>>
-
-    @Query("INSERT INTO receipe (name) VALUES (:name)")
-    suspend fun insertReceipe(name: String)
-
-    @Query("DELETE FROM receipe")
-    suspend fun deleteAllReceipe()
-
-    @Query("DELETE FROM receipe WHERE id = :id")
-    suspend fun deleteIdReceipe(id: Int)
-
     //---MEASURE-------------------------------------------------------------------------
     @Query("SELECT id, name  FROM measure")
     fun getDataMeasure(): LiveData<List<Data>>
@@ -87,20 +87,20 @@ interface CookDao {
     @Query("DELETE FROM measure WHERE id = :id")
     suspend fun deleteIdMeasure(id: Int)
 
-    //---AUTOR---------------------------------------------------------------------------
-    @Query("SELECT id, name  FROM autor")
-    fun getDataAutor(): LiveData<List<Data>>
+    //---AUTHOR--------------------------------------------------------------------------
+    @Query("SELECT id, name  FROM author")
+    fun getDataAuthor(): LiveData<List<Data>>
 
-    @Query("SELECT * FROM autor")
-    fun getAllAutor(): LiveData<List<Autor>>
+    @Query("SELECT * FROM author")
+    fun getAllAuthor(): LiveData<List<Author>>
 
-    @Query("INSERT INTO autor (name) VALUES (:name)")
-    suspend fun insertAutor(name: String)
+    @Query("INSERT INTO author (name) VALUES (:name)")
+    suspend fun insertAuthor(name: String)
 
-    @Query("DELETE FROM autor")
-    suspend fun deleteAllAutor()
+    @Query("DELETE FROM author")
+    suspend fun deleteAllAuthor()
 
-    @Query("DELETE FROM autor WHERE id = :id")
-    suspend fun deleteIdAutor(id: Int)
+    @Query("DELETE FROM author WHERE id = :id")
+    suspend fun deleteIdAuthor(id: Int)
 
 }

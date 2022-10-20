@@ -46,10 +46,10 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel?) {
         when(index) {
             0 -> vm.allDataTag.observeAsState(listOf()).value
             1 -> vm.allDataDish.observeAsState(listOf()).value
-            2 -> vm.allDataReceipe.observeAsState(listOf()).value
+            2 -> vm.allDataRecipe.observeAsState(listOf()).value
             3 -> vm.allDataIngredient.observeAsState(listOf()).value
             4 -> vm.allDataMeasure.observeAsState(listOf()).value
-            5 -> vm.allDataAutor.observeAsState(listOf()).value
+            5 -> vm.allDataAuthor.observeAsState(listOf()).value
             else -> listOf(Data(1, "A"), Data(2, "B"))
         }
     }

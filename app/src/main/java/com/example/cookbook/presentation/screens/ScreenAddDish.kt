@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabText
+import com.example.cookbook.tabrText
 import com.example.cookbook.ui.theme.CookbookTheme
 import com.example.cookbook.viewmodels.CookViewModel
 
@@ -20,7 +21,7 @@ fun ScreenAddDish(nc: NavController?, vm: CookViewModel?, index: Int) {
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
-            label = { Text("${tabText[index]}: название") },
+            label = { Text("название ${tabrText[index]}") },
             singleLine = true
         )
         Button(onClick = {
@@ -28,10 +29,10 @@ fun ScreenAddDish(nc: NavController?, vm: CookViewModel?, index: Int) {
                 when(index) {
                     0 -> vm?.insertTag(text)
                     1 -> vm?.insertDish(text)
-                    2 -> vm?.insertReceipe(text)
+                    2 -> vm?.insertRecipe(text)
                     3 -> vm?.insertIngredient(text)
-                    4 -> vm?.insertaMeasure(text)
-                    5 -> vm?.insertAutor(text)
+                    4 -> vm?.insertMeasure(text)
+                    5 -> vm?.insertAuthor(text)
                     else -> {}
                 }
 

@@ -1,4 +1,40 @@
 <resources>
     <string name="app_name">cookbook</string>
-    <string name="Tag">Разделы</string>
+
+    <string-array name="tab_array">
+        <item>Раздел</item>
+        <item>Блюдо</item>
+        <item>Рецепт</item>
+        <item>Ингредиент</item>
+        <item>Мера</item>
+        <item>Автор</item>
+    </string-array>
+
+    <string-array name="tabs_array">
+        <item>Разделы</item>
+        <item>Блюда</item>
+        <item>Рецепты</item>
+        <item>Ингредиенты</item>
+        <item>Меры</item>
+        <item>Авторы</item>
+    </string-array>
+
+    <string-array name="tabr_array">
+        <item>раздела</item>
+        <item>блюда</item>
+        <item>рецепта</item>
+        <item>ингредиента</item>
+        <item>меры</item>
+        <item>автора</item>
+    </string-array>
+
+    <string-array name="tabn_array">
+        <item>разделов</item>
+        <item>блюд</item>
+        <item>рецептов</item>
+        <item>ингредиентов</item>
+        <item>мер</item>
+        <item>авторов</item>
+    </string-array>
+
 </resources>
