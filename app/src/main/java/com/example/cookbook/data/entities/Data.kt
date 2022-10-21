@@ -1,3 +1,3 @@
 package com.example.cookbook.data.entities
 
-data class Data (val id: Int, val name: String)
+data class Data (val id: Int, val name: String, val selected: Int)

@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -33,47 +32,53 @@ import com.example.cookbook.data.entities.Data
 import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabText
-import com.example.cookbook.ui.theme.CookbookTheme
 import com.example.cookbook.viewmodels.CookViewModel
 import kotlin.math.roundToInt
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScreenHome(nc: NavController?, vm: CookViewModel?) {
+fun ScreenHome(nc: NavController?, vm: CookViewModel) {
 
+    //---номер текущей закладки в верхней строке-----------------------------------------
     var index by remember { mutableStateOf(indexTab) }
     val onIndexChange = { value: Int -> index = value }
 
-    var dialogState by remember { mutableStateOf(false) }
+    //---список id для выбранных записей-------------------------------------------------
+    var selectedIdTag: List<Int> by remember { mutableStateOf(listOf()) }
+    selectedIdTag = vm.getSelectedId(index).observeAsState(listOf()).value
 
-    if (dialogState) {
-        DialogDelete("") { dialogState = false }
+    //---количество выбранных записей----------------------------------------------------
+    var numerOfSelected by remember { mutableStateOf(0) }
+    numerOfSelected = vm.numerOfSelected(index).observeAsState(0).value
+
+    //---состояние видимости диалога удаления записи-------------------------------------
+    var dialogDeleteState by remember { mutableStateOf(false) }
+
+    if (dialogDeleteState) {
+        DialogDelete("") { dialogDeleteState = false }
     }
 
+    //---лямбда изменяющая состояние видимости диалога удаления записи-------------------
     val onSetDialogState = { value: Boolean ->
-        dialogState = value
-        Log.i("--==>", "dialogState = $dialogState")
-        Unit
+        dialogDeleteState = value
     }
 
+    //---данные для заполнения таблицы---------------------------------------------------
     var data: List<Data> by remember {
         mutableStateOf(listOf())
     }
 
-    data = if (vm == null) {
-        listOf(Data(1, "A"), Data(2, "B"))
-    } else {
-        when (index) {
-            0 -> vm.allDataTag.observeAsState(listOf()).value
-            1 -> vm.allDataDish.observeAsState(listOf()).value
-            2 -> vm.allDataRecipe.observeAsState(listOf()).value
-            3 -> vm.allDataIngredient.observeAsState(listOf()).value
-            4 -> vm.allDataMeasure.observeAsState(listOf()).value
-            5 -> vm.allDataAuthor.observeAsState(listOf()).value
-            else -> listOf(Data(1, "A"), Data(2, "B"))
-        }
+    data = when (index) {
+        0 -> vm.allDataTag.observeAsState(listOf()).value
+        1 -> vm.allDataDish.observeAsState(listOf()).value
+        2 -> vm.allDataRecipe.observeAsState(listOf()).value
+        3 -> vm.allDataIngredient.observeAsState(listOf()).value
+        4 -> vm.allDataMeasure.observeAsState(listOf()).value
+        5 -> vm.allDataAuthor.observeAsState(listOf()).value
+        else -> listOf(Data(1, "Invalid Tab", 0))
     }
 
+    //---------------------------------------------------------------
     Scaffold(
         drawerContent = {
             Text("Drawer title", modifier = Modifier.padding(16.dp))
@@ -86,24 +91,55 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel?) {
             FloatingActionButton(
                 onClick = {
                     nc?.navigate(NavRoutes.AddDish.route + "/$index")
+                },
+                contentColor = MaterialTheme.colorScheme.background,
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                content = {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Add Note Button"
+                    )
                 }
-            ) {}
+            )
         },
         isFloatingActionButtonDocked = true,
         bottomBar = {
-            BottomAppBar { /* Bottom app bar content */ }
+            BottomAppBar {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = null,
+                    tint = if (numerOfSelected == 1) Color.White else Color.Gray,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+                        .clickable {
+                        }
+                )
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = null,
+                    tint = if (numerOfSelected == 0) Color.Gray else Color.White,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+                        .clickable {
+                            onSetDialogState(true)
+                        }
+                )
+            }
         }
     ) {
         Column {
             ListTabs(index, onIndexChange)
-            Tabulator(data = data, index, onSetDialogState)
+            Tabulator(vm = vm, data = data, index, onSetDialogState)
         }
     }
 }
 
 // строка с закладками ------------------------------------------------------------------
 @Composable
-fun ListTabs(index: Int, onIndexChange: (Int) -> Unit) {
+fun ListTabs(
+    index: Int,
+    onIndexChange: (Int) -> Unit
+) {
     val selectedIndex = remember { mutableStateOf(index) }
 
     ScrollableTabRow(
@@ -204,7 +240,12 @@ fun TitleRow(head1: String, head2: String) {
 
 // таблица ------------------------------------------------------------------------------
 @Composable
-fun Tabulator(data: List<Data>, index: Int, onSetDialogState: (b: Boolean) -> Unit) {
+fun Tabulator(
+    vm: CookViewModel,
+    data: List<Data>,
+    index: Int,
+    onSetDialogState: (b: Boolean) -> Unit
+) {
     TitleRow(head1 = "id", head2 = tabText[index])
     LazyColumn(
         Modifier
@@ -215,12 +256,37 @@ fun Tabulator(data: List<Data>, index: Int, onSetDialogState: (b: Boolean) -> Un
 
         itemsIndexed(
             items = data,
-            itemContent = { index, item ->
-                SwipeableListItem(index, item, onSetDialogState) { index ->
-
-                }
+            itemContent = { idx, item ->
+                DataRow(vm, item.id, index, item.name, item.selected)
+                //SwipeableListItem(index, item, onSetDialogState) { index ->  }
             }
         )
+    }
+}
+
+// строка таблицы без свайпа ------------------------------------------------------------
+@Composable
+fun DataRow(
+    vm: CookViewModel,
+    id: Int,
+    index: Int,
+    name: String,
+    sel: Int = 0,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(5.dp)
+            .background(if (sel == 1) Color.Yellow else Color.White)
+            .clickable {
+                if (sel == 0) vm.selectedOn(id, index) else vm.selectedOff(id, index)
+            }
+    ) {
+        Text(
+            id.toString(), modifier = Modifier
+                .weight(0.1f)
+        )
+        Text(name, modifier = Modifier.weight(0.2f))
     }
 }
 
@@ -332,24 +398,17 @@ fun BackgroundListItem(modifier: Modifier, onSetDialogState: (b: Boolean) -> Uni
 }
 
 
-
-
-
-
-
-
-
 // PREVIEW UI----------------------------------------------------------------------------
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    CookbookTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.surface
-        ) {
-            ScreenHome(null, null)
-        }
-    }
-}
+//@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    CookbookTheme {
+//        Surface(
+//            modifier = Modifier.fillMaxSize(),
+//            color = MaterialTheme.colorScheme.surface
+//        ) {
+//            ScreenHome(null, null)
+//        }
+//    }
+//}

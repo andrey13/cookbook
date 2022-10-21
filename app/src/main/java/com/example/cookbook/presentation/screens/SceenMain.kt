@@ -8,7 +8,7 @@ import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.viewmodels.CookViewModel
 
 @Composable
-fun ScreenMain(vm: CookViewModel?) {
+fun ScreenMain(vm: CookViewModel) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,

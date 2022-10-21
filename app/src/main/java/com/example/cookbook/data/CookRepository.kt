@@ -1,25 +1,82 @@
 package com.example.cookbook.data
 
+import android.util.Log
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import com.example.cookbook.data.entities.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CookRepository(private val cookDao: CookDao) {
 
-    val allDataTag : LiveData<List<Data>> = cookDao.getDataTag()
-    val allDataDishes : LiveData<List<Data>> = cookDao.getDataDish()
-    val allDataRecipe : LiveData<List<Data>> = cookDao.getDataRecipe()
-    val allDataIngredient : LiveData<List<Data>> = cookDao.getDataIngredient()
-    val allDataMeasure : LiveData<List<Data>> = cookDao.getDataMeasure()
-    val allDataAuthor : LiveData<List<Data>> = cookDao.getDataAuthor()
+    val allDataTag: LiveData<List<Data>> = cookDao.getDataTag()
+    val allDataDishes: LiveData<List<Data>> = cookDao.getDataDish()
+    val allDataRecipe: LiveData<List<Data>> = cookDao.getDataRecipe()
+    val allDataIngredient: LiveData<List<Data>> = cookDao.getDataIngredient()
+    val allDataMeasure: LiveData<List<Data>> = cookDao.getDataMeasure()
+    val allDataAuthor: LiveData<List<Data>> = cookDao.getDataAuthor()
+
+//    val getSelectedIdTag: LiveData<List<Int>> = cookDao.getSelectedIdTag()
+//
+//    val numerOfSelectedTag: LiveData<Int> = cookDao.numerOfSelectedTag()
+
+    fun getSelectedId(index: Int): LiveData<List<Int>> {
+        return when(index) {
+            0 -> cookDao.getSelectedIdTag()
+            1 -> cookDao.getSelectedIdDish()
+            2 -> cookDao.getSelectedIdRecipe()
+            3 -> cookDao.getSelectedIdIngredient()
+            4 -> cookDao.getSelectedIdMeasure()
+            else -> cookDao.getSelectedIdAuthor()
+        }
+    }
+    fun numerOfSelected(index: Int): LiveData<Int> {
+        return when(index) {
+            0 -> cookDao.numerOfSelectedTag()
+            1 -> cookDao.numerOfSelectedDish()
+            2 -> cookDao.numerOfSelectedRecipe()
+            3 -> cookDao.numerOfSelectedIngredient()
+            4 -> cookDao.numerOfSelectedMeasure()
+            else -> cookDao.numerOfSelectedAuthor()
+        }
+    }
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun insertTag(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
             cookDao.insertTag(name)
+        }
+    }
+
+    fun selectedOff(id: Int, index: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            when (index) {
+                0 -> cookDao.selectedOffTag(id)
+                1 -> cookDao.selectedOffDish(id)
+                2 -> cookDao.selectedOffRecipe(id)
+                3 -> cookDao.selectedOffIngredient(id)
+                4 -> cookDao.selectedOffMeasure(id)
+                5 -> cookDao.selectedOffAuthor(id)
+                else -> {}
+            }
+        }
+    }
+
+    fun selectedOn(id: Int, index: Int) {
+        Log.i("--==>", "id = $id, index = $index")
+        coroutineScope.launch(Dispatchers.IO) {
+            when (index) {
+                0 -> cookDao.selectedOnTag(id)
+                1 -> cookDao.selectedOnDish(id)
+                2 -> cookDao.selectedOnRecipe(id)
+                3 -> cookDao.selectedOnIngredient(id)
+                4 -> cookDao.selectedOnMeasure(id)
+                5 -> cookDao.selectedOnAuthor(id)
+                else -> {}
+            }
         }
     }
 

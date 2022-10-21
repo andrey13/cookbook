@@ -15,6 +15,9 @@ class Ingredient (
     val name: String = "",
 
     @ColumnInfo(name = "comment", defaultValue = "")
-    val comment: String = ""
+    val comment: String = "",
+
+    @ColumnInfo(name = "selected", defaultValue = "0")
+    val selected: Int = 0
 
 )
