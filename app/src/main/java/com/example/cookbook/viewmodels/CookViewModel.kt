@@ -16,9 +16,9 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
     val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure
     val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor
 
-//    val selectedIdTag: LiveData<List<Int>> = repository.getSelectedIdTag
-
-//    val numerOfSelectedTag: LiveData<Int> = repository.numerOfSelectedTag
+    fun setData(id: Int, name: String, index: Int) {
+        repository.setData(id, name, index)
+    }
 
     fun getSelectedId(index: Int): LiveData<List<Int>> = repository.getSelectedId(index)
 
@@ -29,12 +29,10 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
     }
 
     fun selectedOff(id: Int, index: Int) {
-        Log.i("--==>", "selectedOff id = $id")
         repository.selectedOff(id, index)
     }
 
     fun selectedOn(id: Int, index: Int) {
-        Log.i("--==>", "selectedOff id = $id")
         repository.selectedOn(id, index)
     }
 
@@ -64,6 +62,10 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
     fun deleteId(id: Int) {
         repository.deleteIdDish(id)
+    }
+
+    fun deleteSelectedId(selectedId: List<Int>, index: Int) {
+        repository.deleteSelectedId(selectedId, index)
     }
 }
 

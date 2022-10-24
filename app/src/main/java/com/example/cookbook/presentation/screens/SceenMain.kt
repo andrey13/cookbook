@@ -15,12 +15,27 @@ fun ScreenMain(vm: CookViewModel) {
         startDestination = NavRoutes.Home.route,
     ) {
 
-        composable(NavRoutes.AddDish.route + "/{index}") {backStackEntry ->
+        composable(NavRoutes.AddData.route + "/{index}") { backStackEntry ->
+
             val index = backStackEntry.arguments?.getString("index")?.toInt()
+
             if (index != null) {
-                ScreenAddDish(nc = navController, vm, index)
+                ScreenEditData(nc = navController, vm, index, "", "NEW")
             } else {
-                ScreenAddDish(nc = navController, vm, 0)
+                ScreenEditData(nc = navController, vm, 0, "", "NEW")
+            }
+        }
+
+        composable(NavRoutes.EditData.route + "/{index}/{textinit}/{id}") { backStackEntry ->
+
+            val index = backStackEntry.arguments?.getString("index")?.toInt()
+            val textinit = backStackEntry.arguments?.getString("textinit") ?: "?"
+            val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
+
+            if (index != null) {
+                ScreenEditData(nc = navController, vm, index, textinit, "EDIT", id)
+            } else {
+                ScreenEditData(nc = navController, vm, 0, "", "EDIT")
             }
         }
 

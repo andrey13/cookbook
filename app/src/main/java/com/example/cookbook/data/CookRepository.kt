@@ -18,12 +18,39 @@ class CookRepository(private val cookDao: CookDao) {
     val allDataMeasure: LiveData<List<Data>> = cookDao.getDataMeasure()
     val allDataAuthor: LiveData<List<Data>> = cookDao.getDataAuthor()
 
-//    val getSelectedIdTag: LiveData<List<Int>> = cookDao.getSelectedIdTag()
-//
-//    val numerOfSelectedTag: LiveData<Int> = cookDao.numerOfSelectedTag()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+
+    fun setData(id: Int, name: String, index: Int) {
+        coroutineScope.launch(Dispatchers.IO) {
+            when (index) {
+                0 -> cookDao.setDataTag(id, name)
+                1 -> cookDao.setDataDish(id, name)
+                2 -> cookDao.setDataRecipe(id, name)
+                3 -> cookDao.setDataIngredient(id, name)
+                4 -> cookDao.setDataMeasure(id, name)
+                else -> cookDao.setDataAuthor(id, name)
+            }
+        }
+    }
+
+    fun deleteSelectedId(selectedId: List<Int>, index: Int) {
+        selectedId.forEach() { id ->
+            coroutineScope.launch(Dispatchers.IO) {
+                when (index) {
+                    0 -> cookDao.deleteIdTag(id)
+                    1 -> cookDao.deleteIdDish(id)
+                    2 -> cookDao.deleteIdRecipe(id)
+                    3 -> cookDao.deleteIdIngredient(id)
+                    4 -> cookDao.deleteIdMeasure(id)
+                    else -> cookDao.deleteIdAuthor(id)
+                }
+            }
+        }
+    }
 
     fun getSelectedId(index: Int): LiveData<List<Int>> {
-        return when(index) {
+        return when (index) {
             0 -> cookDao.getSelectedIdTag()
             1 -> cookDao.getSelectedIdDish()
             2 -> cookDao.getSelectedIdRecipe()
@@ -32,8 +59,9 @@ class CookRepository(private val cookDao: CookDao) {
             else -> cookDao.getSelectedIdAuthor()
         }
     }
+
     fun numerOfSelected(index: Int): LiveData<Int> {
-        return when(index) {
+        return when (index) {
             0 -> cookDao.numerOfSelectedTag()
             1 -> cookDao.numerOfSelectedDish()
             2 -> cookDao.numerOfSelectedRecipe()
@@ -42,8 +70,6 @@ class CookRepository(private val cookDao: CookDao) {
             else -> cookDao.numerOfSelectedAuthor()
         }
     }
-
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     fun insertTag(name: String) {
         coroutineScope.launch(Dispatchers.IO) {
@@ -121,6 +147,5 @@ class CookRepository(private val cookDao: CookDao) {
             cookDao.deleteIdDish(id)
         }
     }
-
 
 }

@@ -11,6 +11,9 @@ interface CookDao {
     @Query("SELECT id, name, selected  FROM tag ORDER BY name")
     fun getDataTag(): LiveData<List<Data>>
 
+    @Query("UPDATE tag SET name = :name WHERE id = :id")
+    suspend fun setDataTag(id: Int, name: String)
+
     @Query("SELECT id FROM tag WHERE selected = 1")
     fun getSelectedIdTag(): LiveData<List<Int>>
 
@@ -38,6 +41,9 @@ interface CookDao {
     //---DISH----------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM dish ORDER BY name")
     fun getDataDish(): LiveData<List<Data>>
+
+    @Query("UPDATE dish SET name = :name WHERE id = :id")
+    suspend fun setDataDish(id: Int, name: String)
 
     @Query("SELECT id FROM dish WHERE selected = 1")
     fun getSelectedIdDish(): LiveData<List<Int>>
@@ -67,6 +73,9 @@ interface CookDao {
     @Query("SELECT id, name, selected  FROM recipe ORDER BY name")
     fun getDataRecipe(): LiveData<List<Data>>
 
+    @Query("UPDATE recipe SET name = :name WHERE id = :id")
+    suspend fun setDataRecipe(id: Int, name: String)
+
     @Query("SELECT id FROM recipe WHERE selected = 1")
     fun getSelectedIdRecipe(): LiveData<List<Int>>
 
@@ -94,6 +103,9 @@ interface CookDao {
     //---INGREDIENT----------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM ingredient ORDER BY name")
     fun getDataIngredient(): LiveData<List<Data>>
+
+    @Query("UPDATE ingredient SET name = :name WHERE id = :id")
+    suspend fun setDataIngredient(id: Int, name: String)
 
     @Query("SELECT id FROM ingredient WHERE selected = 1")
     fun getSelectedIdIngredient(): LiveData<List<Int>>
@@ -123,6 +135,9 @@ interface CookDao {
     @Query("SELECT id, name, selected  FROM measure ORDER BY name")
     fun getDataMeasure(): LiveData<List<Data>>
 
+    @Query("UPDATE measure SET name = :name WHERE id = :id")
+    suspend fun setDataMeasure(id: Int, name: String)
+
     @Query("SELECT id FROM measure WHERE selected = 1")
     fun getSelectedIdMeasure(): LiveData<List<Int>>
 
@@ -150,6 +165,9 @@ interface CookDao {
     //---AUTHOR--------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM author ORDER BY name")
     fun getDataAuthor(): LiveData<List<Data>>
+
+    @Query("UPDATE author SET name = :name WHERE id = :id")
+    suspend fun setDataAuthor(id: Int, name: String)
 
     @Query("SELECT id FROM author WHERE selected = 1")
     fun getSelectedIdAuthor(): LiveData<List<Int>>

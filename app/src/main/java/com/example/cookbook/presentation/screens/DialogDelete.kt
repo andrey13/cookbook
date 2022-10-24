@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DialogDelete(text: String, onDismiss: () -> Unit) {
+fun DialogDelete(text: String, onCancel: () -> Unit, onOk: () -> Unit) {
     AlertDialog(
         title = {
             Text(text = "Удалить запись?")
@@ -18,22 +18,22 @@ fun DialogDelete(text: String, onDismiss: () -> Unit) {
         },
         confirmButton = {
             OutlinedButton(
-                onClick = onDismiss,
+                onClick = onCancel,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(4.dp)
                     .width(100.dp)
             ) {
                 Text(text = "Cancel")
             }
             Button(
-                onClick = onDismiss,
+                onClick = onOk,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(4.dp)
                     .width(100.dp)
             ) {
                 Text(text = "Ok")
             }
         },
-        onDismissRequest = onDismiss
+        onDismissRequest = {}
     )
 }

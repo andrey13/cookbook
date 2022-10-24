@@ -1,12 +1,9 @@
 package com.example.cookbook.presentation.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ScrollableTabRow
@@ -19,13 +16,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.cookbook.data.entities.Data
@@ -33,7 +28,6 @@ import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabText
 import com.example.cookbook.viewmodels.CookViewModel
-import kotlin.math.roundToInt
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -44,8 +38,8 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     val onIndexChange = { value: Int -> index = value }
 
     //---список id для выбранных записей-------------------------------------------------
-    var selectedIdTag: List<Int> by remember { mutableStateOf(listOf()) }
-    selectedIdTag = vm.getSelectedId(index).observeAsState(listOf()).value
+    var selectedId: List<Int> by remember { mutableStateOf(listOf()) }
+    selectedId = vm.getSelectedId(index).observeAsState(listOf()).value
 
     //---количество выбранных записей----------------------------------------------------
     var numerOfSelected by remember { mutableStateOf(0) }
@@ -55,7 +49,16 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     var dialogDeleteState by remember { mutableStateOf(false) }
 
     if (dialogDeleteState) {
-        DialogDelete("") { dialogDeleteState = false }
+        DialogDelete(
+            text = "",
+            onCancel = {
+                dialogDeleteState = false
+            },
+            onOk = {
+                vm.deleteSelectedId(selectedId, index)
+                dialogDeleteState = false
+            }
+        )
     }
 
     //---лямбда изменяющая состояние видимости диалога удаления записи-------------------
@@ -78,19 +81,24 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
         else -> listOf(Data(1, "Invalid Tab", 0))
     }
 
-    //---------------------------------------------------------------
+    //-----------------------------------------------------------------------------------
     Scaffold(
+        //---верхняя строка--------------------------------------------------------------
+        topBar = { TopAppBar { } },
+
+        //---левая шторка----------------------------------------------------------------
         drawerContent = {
             Text("Drawer title", modifier = Modifier.padding(16.dp))
             Divider()
         },
         drawerElevation = DrawerDefaults.Elevation,
         drawerShape = MaterialTheme.shapes.large,
-        topBar = { TopAppBar { } },
+
+        //---плавающая кнопка добавления записи------------------------------------------
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    nc?.navigate(NavRoutes.AddDish.route + "/$index")
+                    nc?.navigate(NavRoutes.AddData.route + "/$index")
                 },
                 contentColor = MaterialTheme.colorScheme.background,
                 backgroundColor = MaterialTheme.colorScheme.primary,
@@ -103,6 +111,8 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
             )
         },
         isFloatingActionButtonDocked = true,
+
+        //---нижняя строка---------------------------------------------------------------
         bottomBar = {
             BottomAppBar {
                 Icon(
@@ -112,6 +122,9 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
+                            val id = selectedId[0]
+                            val textinit = data[data.indexOf(Data(id, "", 1))]
+                            nc?.navigate(NavRoutes.EditData.route + "/$index/$textinit/$id")
                         }
                 )
                 Icon(
@@ -121,14 +134,15 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
-                            onSetDialogState(true)
+                            if (numerOfSelected != 0) onSetDialogState(true)
                         }
                 )
             }
         }
     ) {
+        //---таблица с данными-----------------------------------------------------------
         Column {
-            ListTabs(index, onIndexChange)
+            Header(index, onIndexChange)
             Tabulator(vm = vm, data = data, index, onSetDialogState)
         }
     }
@@ -136,7 +150,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
 
 // строка с закладками ------------------------------------------------------------------
 @Composable
-fun ListTabs(
+fun Header(
     index: Int,
     onIndexChange: (Int) -> Unit
 ) {
@@ -166,7 +180,7 @@ fun ListTabs(
                     .fillMaxWidth()
                     .padding(0.dp)
             ) {
-                CustomTab(
+                HeaderTab(
                     text = text,
                     selected = index == selectedIndex.value,
                     modifier = Modifier
@@ -182,7 +196,7 @@ private val noIndicator: @Composable (List<TabPosition>) -> Unit = {}
 
 // закладка -----------------------------------------------------------------------------
 @Composable
-private fun CustomTab(
+private fun HeaderTab(
     text: String,
     selected: Boolean,
     modifier: Modifier = Modifier
@@ -258,13 +272,12 @@ fun Tabulator(
             items = data,
             itemContent = { idx, item ->
                 DataRow(vm, item.id, index, item.name, item.selected)
-                //SwipeableListItem(index, item, onSetDialogState) { index ->  }
             }
         )
     }
 }
 
-// строка таблицы без свайпа ------------------------------------------------------------
+// строка таблицы -----------------------------------------------------------------------
 @Composable
 fun DataRow(
     vm: CookViewModel,
@@ -290,112 +303,11 @@ fun DataRow(
     }
 }
 
-// строка таблицы со свайпом ------------------------------------------------------------
-@Composable
-fun SwipeableListItem(
-    index: Int,
-    item: Data,
-    onSetDialogState: (b: Boolean) -> Unit,
-    onItemSwiped: (Int) -> Unit
-) {
-    val visible = remember(item.id) { mutableStateOf(true) }
 
-    AnimatedVisibility(visible = visible.value) {
-        Box(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
 
-            BackgroundListItem(modifier = Modifier.align(Alignment.CenterEnd), onSetDialogState)
 
-            ForegroundListItem(item, index) {
-                Log.i("--==>", "SWIPED")
-                //visible.value = false
-                onItemSwiped.invoke(index)
-            }
-        }
-    }
-}
 
-enum class SwipeState {
-    SWIPED, VISIBLE, MIDDLE
-}
 
-// передняя строка ----------------------------------------------------------------------
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ForegroundListItem(item: Data, index: Int, onItemSwiped: (Int) -> Unit) {
-    val swipeableState = rememberSwipeableState(
-        initialValue = SwipeState.VISIBLE,
-        confirmStateChange = {
-            if (it == SwipeState.SWIPED) {
-                onItemSwiped.invoke(index)
-            }
-            true
-        }
-    )
-    val swipeAnchors = mapOf(
-        0f to SwipeState.VISIBLE,
-        -1000f to SwipeState.SWIPED,
-        -500f to SwipeState.MIDDLE
-    )
-
-    Row(
-        modifier = Modifier
-            .swipeable(
-                state = swipeableState,
-                anchors = swipeAnchors,
-                thresholds = { _, _ -> FractionalThreshold(0.5f) },
-                orientation = Orientation.Horizontal
-            )
-            .offset { IntOffset(swipeableState.offset.value.roundToInt(), 0) }
-            .background(MaterialTheme.colorScheme.background),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(
-            text = item.name,
-            modifier = Modifier
-                .padding(horizontal = 4.dp)
-                .weight(1f),
-        )
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowLeft,
-            contentDescription = null,
-            tint = Color.LightGray,
-            modifier = Modifier.padding(4.dp)
-        )
-    }
-}
-
-// задняя строка ------------------------------------------------------------------------
-@Composable
-fun BackgroundListItem(modifier: Modifier, onSetDialogState: (b: Boolean) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.End,
-        modifier = modifier
-            .padding(0.dp)
-            .height(33.dp)
-    )
-    {
-        IconButton(
-            onClick = {
-                Log.i("--==>", "onClick Edit")
-                onSetDialogState(true)
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = "EDIT"
-            )
-        }
-        IconButton(onClick = { onSetDialogState(true) }) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "DELETE"
-            )
-        }
-    }
-}
 
 
 // PREVIEW UI----------------------------------------------------------------------------
