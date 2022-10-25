@@ -8,6 +8,7 @@ import com.example.cookbook.data.entities.*
 interface CookDao {
 
     //---TAG-----------------------------------------------------------------------------
+
     @Query("SELECT id, name, selected  FROM tag ORDER BY name")
     fun getDataTag(): LiveData<List<Data>>
 
@@ -19,6 +20,9 @@ interface CookDao {
 
     @Query("SELECT COUNT() FROM tag WHERE selected = 1")
     fun numerOfSelectedTag(): LiveData<Int>
+
+    @Query("SELECT COUNT() FROM tag WHERE selected = 1")
+    suspend fun numerOfSelTag(): Int
 
     @Query("SELECT * FROM tag")
     fun getAllTag(): LiveData<List<Tag>>
@@ -69,6 +73,9 @@ interface CookDao {
     @Query("SELECT COUNT(selected) FROM dish WHERE selected = 1")
     fun numerOfSelectedDish():  LiveData<Int>
 
+    @Query("SELECT COUNT(selected) FROM dish WHERE selected = 1")
+    suspend fun numerOfSelDish():  Int
+
     //---RECIPE-------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM recipe ORDER BY name")
     fun getDataRecipe(): LiveData<List<Data>>
@@ -99,6 +106,9 @@ interface CookDao {
 
     @Query("SELECT COUNT(selected) FROM recipe WHERE selected = 1")
     fun numerOfSelectedRecipe():  LiveData<Int>
+
+    @Query("SELECT COUNT(selected) FROM recipe WHERE selected = 1")
+    suspend fun numerOfSelRecipe():  Int
 
     //---INGREDIENT----------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM ingredient ORDER BY name")
@@ -131,6 +141,9 @@ interface CookDao {
     @Query("SELECT COUNT(selected) FROM ingredient WHERE selected = 1")
     fun numerOfSelectedIngredient():  LiveData<Int>
 
+    @Query("SELECT COUNT(selected) FROM ingredient WHERE selected = 1")
+    suspend fun numerOfSelIngredient():  Int
+
     //---MEASURE-------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM measure ORDER BY name")
     fun getDataMeasure(): LiveData<List<Data>>
@@ -161,6 +174,9 @@ interface CookDao {
 
     @Query("SELECT COUNT(selected) FROM measure WHERE selected = 1")
     fun numerOfSelectedMeasure():  LiveData<Int>
+
+    @Query("SELECT COUNT(selected) FROM measure WHERE selected = 1")
+    suspend fun numerOfSelMeasure():  Int
 
     //---AUTHOR--------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM author ORDER BY name")
@@ -193,4 +209,6 @@ interface CookDao {
     @Query("SELECT COUNT(selected) FROM author WHERE selected = 1")
     fun numerOfSelectedAuthor():  LiveData<Int>
 
+    @Query("SELECT COUNT(selected) FROM author WHERE selected = 1")
+    suspend fun numerOfSelAuthor():  Int
 }

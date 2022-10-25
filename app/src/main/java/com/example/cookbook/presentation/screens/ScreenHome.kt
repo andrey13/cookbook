@@ -1,35 +1,47 @@
 package com.example.cookbook.presentation.screens
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ScrollableTabRow
-import androidx.compose.material.Tab
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+
+//import androidx.compose.material.*
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.Add
+//import androidx.compose.material.icons.filled.Delete
+//import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+//import androidx.compose.material.Scaffold
+//import androidx.compose.material.FabPosition
+import androidx.compose.material3.*
+
+import androidx.compose.material3.MaterialTheme
+
+import androidx.compose.ui.text.style.TextOverflow
+
 import androidx.navigation.NavController
+
 import com.example.cookbook.data.entities.Data
 import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
+import com.example.cookbook.tabNSel
 import com.example.cookbook.tabText
 import com.example.cookbook.viewmodels.CookViewModel
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ScreenHome(nc: NavController?, vm: CookViewModel) {
 
@@ -44,6 +56,12 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     //---количество выбранных записей----------------------------------------------------
     var numerOfSelected by remember { mutableStateOf(0) }
     numerOfSelected = vm.numerOfSelected(index).observeAsState(0).value
+
+    var tabNSelected by remember { mutableStateOf(listOf(0, 0, 0, 0, 0, 0)) }
+    tabNSelected = vm.getNSelected().observeAsState(listOf(0, 0, 0, 0, 0, 0)).value
+
+    //Log.i("--==>", "tabNSelected = $tabNSelected")
+    //Log.i("--==>", "ScreenHome")
 
     //---состояние видимости диалога удаления записи-------------------------------------
     var dialogDeleteState by remember { mutableStateOf(false) }
@@ -81,27 +99,43 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
         else -> listOf(Data(1, "Invalid Tab", 0))
     }
 
+
     //-----------------------------------------------------------------------------------
     Scaffold(
         //---верхняя строка--------------------------------------------------------------
-        topBar = { TopAppBar { } },
-
-        //---левая шторка----------------------------------------------------------------
-        drawerContent = {
-            Text("Drawer title", modifier = Modifier.padding(16.dp))
-            Divider()
+        topBar = {
+            TopAppBar(title = {
+                Text(
+                    "cook book",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                //Header(index, onIndexChange)
+            })
         },
-        drawerElevation = DrawerDefaults.Elevation,
-        drawerShape = MaterialTheme.shapes.large,
+
+        content = { innerPadding ->
+            Column {
+                Text(" \r\n \r\n ")
+                Header(index, tabNSelected, onIndexChange)
+                Tabulator(vm = vm, data = data, index, onSetDialogState)
+            }
+        },
+        //---левая шторка----------------------------------------------------------------
+//        drawerContent = {
+//            Text("Drawer title", modifier = Modifier.padding(16.dp))
+//            Divider()
+//        },
+//        drawerElevation = DrawerDefaults.Elevation,
+//        drawerShape = MaterialTheme.shapes.large,
 
         //---плавающая кнопка добавления записи------------------------------------------
+        floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     nc?.navigate(NavRoutes.AddData.route + "/$index")
                 },
-                contentColor = MaterialTheme.colorScheme.background,
-                backgroundColor = MaterialTheme.colorScheme.primary,
                 content = {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -110,7 +144,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                 }
             )
         },
-        isFloatingActionButtonDocked = true,
+        //isFloatingActionButtonDocked = true,
 
         //---нижняя строка---------------------------------------------------------------
         bottomBar = {
@@ -139,19 +173,15 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                 )
             }
         }
-    ) {
-        //---таблица с данными-----------------------------------------------------------
-        Column {
-            Header(index, onIndexChange)
-            Tabulator(vm = vm, data = data, index, onSetDialogState)
-        }
-    }
+    )
 }
 
 // строка с закладками ------------------------------------------------------------------
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Header(
     index: Int,
+    tabNSelected: List<Int>,
     onIndexChange: (Int) -> Unit
 ) {
     val selectedIndex = remember { mutableStateOf(index) }
@@ -161,10 +191,11 @@ fun Header(
         divider = {},
         edgePadding = 2.dp,
         indicator = noIndicator,
-        backgroundColor = Color.Transparent,
+        //backgroundColor = Color.Transparent,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp)
+            .padding(1.dp)
+            .background(Color.Transparent)
     ) {
         tabText.forEachIndexed { index, text ->
             Tab(
@@ -178,15 +209,30 @@ fun Header(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp)
+                    .padding(1.dp)
             ) {
-                HeaderTab(
-                    text = text,
-                    selected = index == selectedIndex.value,
-                    modifier = Modifier
-                        .width(120.dp)
-                        .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 4.dp)
-                )
+                BadgedBox(
+                    badge = {
+                        if (tabNSelected[index] != 0) {
+                            Badge(
+                                modifier = Modifier.offset(-20.dp, 11.dp)
+                            ) {
+                                Text(
+                                    tabNSelected[index].toString(),
+                                )
+                            }
+                        }
+                    }
+                ) {
+                    HeaderTab(
+                        text = text,
+                        selected = index == selectedIndex.value,
+                        modifier = Modifier
+                            .width(120.dp)
+                            .padding(start = 2.dp, end = 2.dp, top = 4.dp, bottom = 4.dp)
+                    )
+                }
+
             }
         }
     }
@@ -224,7 +270,7 @@ private fun HeaderTab(
             text = text,
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),
+                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
             textAlign = TextAlign.Center,
         )
     }
@@ -240,12 +286,12 @@ fun TitleRow(head1: String, head2: String) {
             .padding(2.dp),
     ) {
         Text(
-            head1, color = Color.White,
+            head1, color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .weight(0.1f)
         )
         Text(
-            head2, color = Color.White,
+            head2, color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .weight(0.2f)
         )
@@ -302,12 +348,6 @@ fun DataRow(
         Text(name, modifier = Modifier.weight(0.2f))
     }
 }
-
-
-
-
-
-
 
 
 // PREVIEW UI----------------------------------------------------------------------------

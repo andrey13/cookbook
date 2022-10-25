@@ -3,6 +3,8 @@ package com.example.cookbook.data
 import android.util.Log
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.cookbook.data.entities.Data
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -146,6 +148,22 @@ class CookRepository(private val cookDao: CookDao) {
         coroutineScope.launch(Dispatchers.IO) {
             cookDao.deleteIdDish(id)
         }
+    }
+
+    fun getNSelected(): LiveData<List<Int>> {
+        val liveDataResult = MutableLiveData<List<Int>>()
+        val result = mutableListOf(0,0,0,0,0,0)
+        coroutineScope.launch(Dispatchers.IO) {
+            result[0] = cookDao.numerOfSelTag()
+            result[1] = cookDao.numerOfSelDish()
+            result[2] = cookDao.numerOfSelRecipe()
+            result[3] = cookDao.numerOfSelIngredient()
+            result[4] = cookDao.numerOfSelMeasure()
+            result[5] = cookDao.numerOfSelAuthor()
+        }
+
+        liveDataResult.value = result
+        return liveDataResult
     }
 
 }

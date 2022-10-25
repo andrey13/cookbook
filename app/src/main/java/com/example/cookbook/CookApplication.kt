@@ -9,6 +9,7 @@ lateinit var tabText: Array<String>
 lateinit var tabsText: Array<String>
 lateinit var tabrText: Array<String>
 lateinit var tabnText: Array<String>
+lateinit var tabNSel: MutableList<Int>
 
 var indexTab = 0
 var dialogShow = false

@@ -16,6 +16,8 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
     val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure
     val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor
 
+    fun getNSelected(): LiveData<List<Int>> = repository.getNSelected()
+
     fun setData(id: Int, name: String, index: Int) {
         repository.setData(id, name, index)
     }
