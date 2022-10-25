@@ -1,4 +1,4 @@
-package com.example.cookbook.presentation.screens
+package com.example.cookbook.presentation.composables
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -26,14 +26,14 @@ fun ScreenMain(vm: CookViewModel) {
             }
         }
 
-        composable(NavRoutes.EditData.route + "/{index}/{textinit}/{id}") { backStackEntry ->
+        composable(NavRoutes.EditData.route + "/{index}/{name}/{id}") { backStackEntry ->
 
             val index = backStackEntry.arguments?.getString("index")?.toInt()
-            val textinit = backStackEntry.arguments?.getString("textinit") ?: "?"
+            val name = backStackEntry.arguments?.getString("name") ?: "?"
             val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
 
             if (index != null) {
-                ScreenEditData(nc = navController, vm, index, textinit, "EDIT", id)
+                ScreenEditData(nc = navController, vm, index, name, "EDIT", id)
             } else {
                 ScreenEditData(nc = navController, vm, 0, "", "EDIT")
             }

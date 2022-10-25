@@ -1,16 +1,12 @@
-package com.example.cookbook.presentation.screens
+package com.example.cookbook.presentation.composables
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabrText
-import com.example.cookbook.ui.theme.CookbookTheme
 import com.example.cookbook.viewmodels.CookViewModel
 
 @Composable
@@ -18,11 +14,11 @@ fun ScreenEditData(
     nc: NavController?,
     vm: CookViewModel,
     index: Int,
-    textInit: String,
+    name: String,
     mode: String,
     id: Int = 0
 ) {
-    var text by rememberSaveable { mutableStateOf(textInit) }
+    var text by rememberSaveable { mutableStateOf(name) }
 
     Column {
         OutlinedTextField(
@@ -46,7 +42,7 @@ fun ScreenEditData(
                     nc?.popBackStack(NavRoutes.Home.route, inclusive = false)
                 }
                 "EDIT" -> if (text != "") {
-                    vm.setData(id, textInit, index)
+                    vm.setData(id, text, index)
                     nc?.popBackStack(NavRoutes.Home.route, inclusive = false)
                 }
                 else -> {}

@@ -1,4 +1,4 @@
-package com.example.cookbook.presentation.screens
+package com.example.cookbook.presentation.composables
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width

@@ -1,7 +1,7 @@
-package com.example.cookbook.presentation.screens
+package com.example.cookbook.presentation.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,26 +17,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 //import androidx.compose.material.*
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.Add
-//import androidx.compose.material.icons.filled.Delete
-//import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+//import androidx.compose.material3.Icon
 //import androidx.compose.material.Scaffold
 //import androidx.compose.material.FabPosition
 import androidx.compose.material3.*
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.lifecycle.Observer
 
 import androidx.navigation.NavController
+import com.example.cookbook.R
 
 import com.example.cookbook.data.entities.Data
+import com.example.cookbook.data.entities.Tag
 import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
-import com.example.cookbook.tabNSel
 import com.example.cookbook.tabText
 import com.example.cookbook.viewmodels.CookViewModel
 
@@ -54,11 +56,38 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     selectedId = vm.getSelectedId(index).observeAsState(listOf()).value
 
     //---количество выбранных записей----------------------------------------------------
-    var numerOfSelected by remember { mutableStateOf(0) }
-    numerOfSelected = vm.numerOfSelected(index).observeAsState(0).value
+    var numerSelected by remember { mutableStateOf(0) }
+    numerSelected = vm.numerSelected(index).observeAsState(0).value
 
-    var tabNSelected by remember { mutableStateOf(listOf(0, 0, 0, 0, 0, 0)) }
-    tabNSelected = vm.getNSelected().observeAsState(listOf(0, 0, 0, 0, 0, 0)).value
+//    var tabNSelected by remember { mutableStateOf(listOf(0, 0, 0, 0, 0, 0)) }
+//    tabNSelected = vm.getNSelected().observeAsState(listOf(0, 0, 0, 0, 0, 0)).value
+
+    var nSelTag by remember { mutableStateOf(0) }
+    nSelTag = vm.getNSelTag().observeAsState(0).value
+
+    var nSelDish by remember { mutableStateOf(0) }
+    nSelDish = vm.getNSelDish().observeAsState(0).value
+
+    var nSelRecipe by remember { mutableStateOf(0) }
+    nSelRecipe = vm.getNSelRecipe().observeAsState(0).value
+
+    var nSelIngredient by remember { mutableStateOf(0) }
+    nSelIngredient = vm.getNSelIngredient().observeAsState(0).value
+
+    var nSelMeasure by remember { mutableStateOf(0) }
+    nSelMeasure = vm.getNSelMeasure().observeAsState(0).value
+
+    var nSelAuthor by remember { mutableStateOf(0) }
+    nSelAuthor = vm.getNSelAuthor().observeAsState(0).value
+
+    val tabNSelected = mutableListOf(
+        nSelTag,
+        nSelDish,
+        nSelRecipe,
+        nSelIngredient,
+        nSelMeasure,
+        nSelAuthor
+    )
 
     //Log.i("--==>", "tabNSelected = $tabNSelected")
     //Log.i("--==>", "ScreenHome")
@@ -99,6 +128,16 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
         else -> listOf(Data(1, "Invalid Tab", 0))
     }
 
+    //-----------------------------------------------------------------------------------
+    var dataSelected: Any by remember {
+        mutableStateOf(Data(0, "", 0))
+    }
+
+    dataSelected = if (numerSelected == 1) {
+        vm.getDataById(selectedId[index], index).observeAsState(Data(0, "", 0)).value
+    } else {
+        Data(0, "", 0)
+    }
 
     //-----------------------------------------------------------------------------------
     Scaffold(
@@ -152,23 +191,54 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = null,
-                    tint = if (numerOfSelected == 1) Color.White else Color.Gray,
+                    tint = if (numerSelected == 1) Color.Black else Color.Gray,
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
-                            val id = selectedId[0]
-                            val textinit = data[data.indexOf(Data(id, "", 1))]
-                            nc?.navigate(NavRoutes.EditData.route + "/$index/$textinit/$id")
+                            if (numerSelected == 1) {
+                                val id = selectedId[0]
+                                val name = (dataSelected as Data).name
+                                nc?.navigate(NavRoutes.EditData.route + "/$index/$name/$id")
+                            }
                         }
                 )
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = null,
-                    tint = if (numerOfSelected == 0) Color.Gray else Color.White,
+                    tint = if (numerSelected != 0) Color.Black else Color.Gray,
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
-                            if (numerOfSelected != 0) onSetDialogState(true)
+                            if (numerSelected != 0) onSetDialogState(true)
+                        }
+                )
+                if (index == 1 || index == 2) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = when {
+                            index == 1 && nSelTag != 0 && nSelDish != 0 -> Color.Black
+                            index == 2 && nSelDish == 1 && nSelRecipe != 0 -> Color.Black
+                            else -> Color.Gray
+                        },
+
+                        //if (numerSelected != 0 && nSelTag != 0) Color.Black else Color.Gray,
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                            .clickable {
+                                //if (numerSelected != 0) onSetDialogState(true)
+                            }
+                    )
+                }
+                Icon(
+                    //imageVector = Icons.Default.Check,
+                    painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
+                    contentDescription = null,
+                    tint = if (numerSelected != 0) Color.Black else Color.Gray,
+                    modifier = Modifier
+                        .padding(start = 10.dp, end = 10.dp)
+                        .clickable {
+//                            if (numerSelected != 0) onSetDialogState(true)
                         }
                 )
             }

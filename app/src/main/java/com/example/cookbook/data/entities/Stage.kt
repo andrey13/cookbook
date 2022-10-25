@@ -9,10 +9,10 @@ class Stage (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int = 0,
+    override val id: Int = 0,
 
     @ColumnInfo(name = "name", defaultValue = "")
-    val name: String = "",
+    override val name: String = "",
 
     @ColumnInfo(name = "minutes", defaultValue = "0")
     val minutes: Int = 0,
@@ -21,6 +21,6 @@ class Stage (
     val comment: String = "",
 
     @ColumnInfo(name = "selected", defaultValue = "0")
-    val selected: Int = 0
+    override val selected: Int = 0
 
-)
+) : Data(id, name, selected)

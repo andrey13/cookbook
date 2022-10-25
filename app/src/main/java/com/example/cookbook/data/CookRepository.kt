@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.cookbook.data.entities.Data
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class CookRepository(private val cookDao: CookDao) {
 
@@ -21,7 +18,6 @@ class CookRepository(private val cookDao: CookDao) {
     val allDataAuthor: LiveData<List<Data>> = cookDao.getDataAuthor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-
 
     fun setData(id: Int, name: String, index: Int) {
         coroutineScope.launch(Dispatchers.IO) {
@@ -62,14 +58,14 @@ class CookRepository(private val cookDao: CookDao) {
         }
     }
 
-    fun numerOfSelected(index: Int): LiveData<Int> {
+    fun numerSelected(index: Int): LiveData<Int> {
         return when (index) {
-            0 -> cookDao.numerOfSelectedTag()
-            1 -> cookDao.numerOfSelectedDish()
-            2 -> cookDao.numerOfSelectedRecipe()
-            3 -> cookDao.numerOfSelectedIngredient()
-            4 -> cookDao.numerOfSelectedMeasure()
-            else -> cookDao.numerOfSelectedAuthor()
+            0 -> cookDao.numerSelTag()
+            1 -> cookDao.numerSelDish()
+            2 -> cookDao.numerSelRecipe()
+            3 -> cookDao.numerSelIngredient()
+            4 -> cookDao.numerSelMeasure()
+            else -> cookDao.numerSelAuthor()
         }
     }
 
@@ -154,16 +150,40 @@ class CookRepository(private val cookDao: CookDao) {
         val liveDataResult = MutableLiveData<List<Int>>()
         val result = mutableListOf(0,0,0,0,0,0)
         coroutineScope.launch(Dispatchers.IO) {
-            result[0] = cookDao.numerOfSelTag()
-            result[1] = cookDao.numerOfSelDish()
-            result[2] = cookDao.numerOfSelRecipe()
-            result[3] = cookDao.numerOfSelIngredient()
-            result[4] = cookDao.numerOfSelMeasure()
-            result[5] = cookDao.numerOfSelAuthor()
+            result[0] = cookDao.numerSelectedTag()
+            result[1] = cookDao.numerSelectedDish()
+            result[2] = cookDao.numerSelectedRecipe()
+            result[3] = cookDao.numerSelectedIngredient()
+            result[4] = cookDao.numerSelectedMeasure()
+            result[5] = cookDao.numerSelectedAuthor()
         }
 
         liveDataResult.value = result
         return liveDataResult
     }
+    
+    fun getNSelTag(): LiveData<Int> = cookDao.numerSelTag()
+    fun getNSelDish(): LiveData<Int> = cookDao.numerSelDish()
+    fun getNSelRecipe(): LiveData<Int> = cookDao.numerSelRecipe()
+    fun getNSelIngredient(): LiveData<Int> = cookDao.numerSelIngredient()
+    fun getNSelMeasure(): LiveData<Int> = cookDao.numerSelMeasure()
+    fun getNSelAuthor(): LiveData<Int> = cookDao.numerSelAuthor()
 
+    fun getDataById(id: Int, index: Int): LiveData<Any> {
+        val liveDataResult = MutableLiveData<Any>()
+        runBlocking {
+            val result = coroutineScope.async(Dispatchers.IO) {
+                when (index) {
+                    0 -> cookDao.getDataByIdTag(id)
+                    1 -> cookDao.getDataByIdDish(id)
+                    2 -> cookDao.getDataByIdRecipe(id)
+                    3 -> cookDao.getDataByIdIngredient(id)
+                    4 -> cookDao.getDataByIdMeasure(id)
+                    else -> cookDao.getDataByIdAuthor(id)
+                }
+            }
+            liveDataResult.value = result.await()
+        }
+        return liveDataResult
+    }
 }

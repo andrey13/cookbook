@@ -1,3 +1,7 @@
 package com.example.cookbook.data.entities
 
-data class Data (val id: Int, val name: String, val selected: Int)
+open class Data (
+    open val id: Int,
+    open val name: String,
+    open val selected: Int
+    )

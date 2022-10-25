@@ -9,10 +9,10 @@ class Recipe (
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int = 0,
+    override val id: Int = 0,
 
     @ColumnInfo(name = "name", defaultValue = "")
-    val name: String = "",
+    override val name: String = "",
 
     @ColumnInfo(name = "rating", defaultValue = "0")
     val rating: Int = 0,
@@ -33,6 +33,6 @@ class Recipe (
     val comment: String = "",
 
     @ColumnInfo(name = "selected", defaultValue = "0")
-    val selected: Int = 0
+    override val selected: Int = 0
 
-)
+) : Data(id, name, selected)

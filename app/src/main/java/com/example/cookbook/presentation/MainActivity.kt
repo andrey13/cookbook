@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cookbook.*
-import com.example.cookbook.presentation.screens.ScreenMain
+import com.example.cookbook.presentation.composables.ScreenMain
 import com.example.cookbook.ui.theme.CookbookTheme
 import com.example.cookbook.viewmodels.CookViewModel
 import com.example.cookbook.viewmodels.CookViewModelFactory

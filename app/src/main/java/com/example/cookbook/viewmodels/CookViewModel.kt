@@ -18,13 +18,21 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
     fun getNSelected(): LiveData<List<Int>> = repository.getNSelected()
 
+    fun getNSelTag(): LiveData<Int> = repository.getNSelTag()
+    fun getNSelDish(): LiveData<Int> = repository.getNSelDish()
+    fun getNSelRecipe(): LiveData<Int> = repository.getNSelRecipe()
+    fun getNSelIngredient(): LiveData<Int> = repository.getNSelIngredient()
+    fun getNSelMeasure(): LiveData<Int> = repository.getNSelMeasure()
+    fun getNSelAuthor(): LiveData<Int> = repository.getNSelAuthor()
+
     fun setData(id: Int, name: String, index: Int) {
+        Log.i("--==>", "setData id = $id, name = $name, index = $index")
         repository.setData(id, name, index)
     }
 
     fun getSelectedId(index: Int): LiveData<List<Int>> = repository.getSelectedId(index)
 
-    fun numerOfSelected(index: Int): LiveData<Int> = repository.numerOfSelected(index)
+    fun numerSelected(index: Int): LiveData<Int> = repository.numerSelected(index)
 
     fun insertTag(name: String) {
         repository.insertTag(name)
@@ -69,9 +77,9 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
     fun deleteSelectedId(selectedId: List<Int>, index: Int) {
         repository.deleteSelectedId(selectedId, index)
     }
+
+    fun getDataById(id: Int, index: Int): LiveData<Any> = repository.getDataById(id, index)
 }
-
-
 
 //---------------------------------------------------------------------------------------
 class CookViewModelFactory(private val repository: CookRepository) : ViewModelProvider.Factory {
