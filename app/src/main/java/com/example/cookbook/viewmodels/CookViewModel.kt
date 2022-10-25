@@ -78,7 +78,10 @@ class CookViewModel(private val repository: CookRepository) : ViewModel() {
         repository.deleteSelectedId(selectedId, index)
     }
 
-    fun getDataById(id: Int, index: Int): LiveData<Any> = repository.getDataById(id, index)
+    fun getDataById(id: Int, index: Int): Any {
+        Log.i("--==>", "getDataById id = $id, index = $index")
+        return repository.getDataById(id, index)
+    }
 }
 
 //---------------------------------------------------------------------------------------

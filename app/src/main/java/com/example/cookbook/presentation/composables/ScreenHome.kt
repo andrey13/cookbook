@@ -1,7 +1,7 @@
 package com.example.cookbook.presentation.composables
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,8 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.lifecycle.Observer
-
 import androidx.navigation.NavController
 import com.example.cookbook.R
 
@@ -89,9 +87,6 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
         nSelAuthor
     )
 
-    //Log.i("--==>", "tabNSelected = $tabNSelected")
-    //Log.i("--==>", "ScreenHome")
-
     //---состояние видимости диалога удаления записи-------------------------------------
     var dialogDeleteState by remember { mutableStateOf(false) }
 
@@ -129,16 +124,17 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     }
 
     //-----------------------------------------------------------------------------------
-    var dataSelected: Any by remember {
-        mutableStateOf(Data(0, "", 0))
-    }
+//    var dataSelected: Any by remember {
+//        mutableStateOf(Data(0, "", 0))
+//    }
 
-    dataSelected = if (numerSelected == 1) {
-        vm.getDataById(selectedId[index], index).observeAsState(Data(0, "", 0)).value
-    } else {
-        Data(0, "", 0)
-    }
+//    dataSelected = if (numerSelected == 1) {
+//        vm.getDataById(id = selectedId[0], index = index)
+//    } else {
+//        Data(0, "", 0)
+//    }
 
+//    val onDataSelected = {value: Any -> dataSelected = value}
     //-----------------------------------------------------------------------------------
     Scaffold(
         //---верхняя строка--------------------------------------------------------------
@@ -197,7 +193,8 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                         .clickable {
                             if (numerSelected == 1) {
                                 val id = selectedId[0]
-                                val name = (dataSelected as Data).name
+                                val dataSel = vm.getDataById(id, index)
+                                val name = (dataSel as Data).name
                                 nc?.navigate(NavRoutes.EditData.route + "/$index/$name/$id")
                             }
                         }

@@ -169,8 +169,8 @@ class CookRepository(private val cookDao: CookDao) {
     fun getNSelMeasure(): LiveData<Int> = cookDao.numerSelMeasure()
     fun getNSelAuthor(): LiveData<Int> = cookDao.numerSelAuthor()
 
-    fun getDataById(id: Int, index: Int): LiveData<Any> {
-        val liveDataResult = MutableLiveData<Any>()
+    fun getDataById(id: Int, index: Int): Any {
+        val liveDataResult: Any
         runBlocking {
             val result = coroutineScope.async(Dispatchers.IO) {
                 when (index) {
@@ -182,7 +182,7 @@ class CookRepository(private val cookDao: CookDao) {
                     else -> cookDao.getDataByIdAuthor(id)
                 }
             }
-            liveDataResult.value = result.await()
+            liveDataResult = result.await()
         }
         return liveDataResult
     }
