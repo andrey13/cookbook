@@ -1,7 +1,6 @@
 package com.example.cookbook.presentation.composables
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +33,6 @@ import androidx.navigation.NavController
 import com.example.cookbook.R
 
 import com.example.cookbook.data.entities.Data
-import com.example.cookbook.data.entities.Tag
 import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabText
@@ -91,8 +89,9 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     var dialogDeleteState by remember { mutableStateOf(false) }
 
     if (dialogDeleteState) {
-        DialogDelete(
-            text = "",
+        DialogInform(
+            title = "",
+            text = "удалить запись?",
             onCancel = {
                 dialogDeleteState = false
             },
@@ -103,9 +102,31 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
         )
     }
 
+    //---состояние видимости диалога добавления записей в контейнер----------------------
+    var dialogIncludeState by remember { mutableStateOf(false) }
+
+    if (dialogIncludeState) {
+        DialogInform(
+            title = "",
+            text = "добавить выбранные записи в контейнер?",
+            onCancel = {
+                dialogIncludeState = false
+            },
+            onOk = {
+                //vm.deleteSelectedId(selectedId, index)
+                dialogIncludeState = false
+            }
+        )
+    }
+
     //---лямбда изменяющая состояние видимости диалога удаления записи-------------------
-    val onSetDialogState = { value: Boolean ->
+    val onSetDialogDeleteState = { value: Boolean ->
         dialogDeleteState = value
+    }
+
+    //---лямбда изменяющая состояние видимости диалога добавления записи-------------------
+    val onSetDialogIncludeState = { value: Boolean ->
+        dialogIncludeState = value
     }
 
     //---данные для заполнения таблицы---------------------------------------------------
@@ -153,7 +174,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
             Column {
                 Text(" \r\n \r\n ")
                 Header(index, tabNSelected, onIndexChange)
-                Tabulator(vm = vm, data = data, index, onSetDialogState)
+                Tabulator(vm = vm, data = data, index, onSetDialogIncludeState)
             }
         },
         //---левая шторка----------------------------------------------------------------
@@ -206,7 +227,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
-                            if (numerSelected != 0) onSetDialogState(true)
+                            if (numerSelected != 0) onSetDialogDeleteState(true)
                         }
                 )
                 if (index == 1 || index == 2) {
@@ -219,11 +240,10 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                             else -> Color.Gray
                         },
 
-                        //if (numerSelected != 0 && nSelTag != 0) Color.Black else Color.Gray,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .clickable {
-                                //if (numerSelected != 0) onSetDialogState(true)
+                                if (numerSelected != 0) onSetDialogIncludeState(true)
                             }
                     )
                 }

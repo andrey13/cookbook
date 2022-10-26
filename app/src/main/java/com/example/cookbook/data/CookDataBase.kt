@@ -45,7 +45,7 @@ abstract class CookDataBase : RoomDatabase() {
         private var INSTANCE: CookDataBase? = null
 
         fun getDatabase(context: Context): CookDataBase {
-            Log.i("--==>", "context = $context, this = $this")
+            //Log.i("--==>", "context = $context, this = $this")
             synchronized(this) {
                 var instance = INSTANCE
 
@@ -60,7 +60,7 @@ abstract class CookDataBase : RoomDatabase() {
                         .addMigrations(MIGRATION_2_TO_3)
                         .build()
 
-                    Log.i("--==>", "instance = $instance")
+                    //Log.i("--==>", "instance = $instance")
                     INSTANCE = instance
                 }
 

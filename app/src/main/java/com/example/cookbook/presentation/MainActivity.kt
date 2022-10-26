@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                 val owner = LocalViewModelStoreOwner.current
                 val repo = (application as CookApplication).repository
 
-                Log.i("--==>", "resources = $resources")
+                Log.i("--==>", "MainActivity: resources = $resources")
                 tabText = resources.getStringArray(R.array.tab_array)
                 tabsText = resources.getStringArray(R.array.tabs_array)
                 tabrText = resources.getStringArray(R.array.tabr_array)
