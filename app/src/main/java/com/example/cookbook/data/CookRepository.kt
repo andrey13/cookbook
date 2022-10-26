@@ -10,12 +10,12 @@ import kotlinx.coroutines.*
 
 class CookRepository(private val cookDao: CookDao) {
 
-    val allDataTag: LiveData<List<Data>> = cookDao.getDataTag()
-    val allDataDishes: LiveData<List<Data>> = cookDao.getDataDish()
-    val allDataRecipe: LiveData<List<Data>> = cookDao.getDataRecipe()
-    val allDataIngredient: LiveData<List<Data>> = cookDao.getDataIngredient()
-    val allDataMeasure: LiveData<List<Data>> = cookDao.getDataMeasure()
-    val allDataAuthor: LiveData<List<Data>> = cookDao.getDataAuthor()
+    fun allDataTag(): LiveData<List<Data>> = cookDao.getDataTag()
+    fun allDataDishes(): LiveData<List<Data>> = cookDao.getDataDish()
+    fun allDataRecipe(): LiveData<List<Data>> = cookDao.getDataRecipe()
+    fun allDataIngredient(): LiveData<List<Data>> = cookDao.getDataIngredient()
+    fun allDataMeasure(): LiveData<List<Data>> = cookDao.getDataMeasure()
+    fun allDataAuthor(): LiveData<List<Data>> = cookDao.getDataAuthor()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 

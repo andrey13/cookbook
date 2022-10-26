@@ -9,12 +9,12 @@ import com.example.cookbook.data.entities.Data
 
 class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
-    val allDataTag : LiveData<List<Data>> = repository.allDataTag
-    val allDataDish: LiveData<List<Data>> = repository.allDataDishes
-    val allDataRecipe : LiveData<List<Data>> = repository.allDataRecipe
-    val allDataIngredient : LiveData<List<Data>> = repository.allDataIngredient
-    val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure
-    val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor
+    val allDataTag : LiveData<List<Data>> = repository.allDataTag()
+    val allDataDish: LiveData<List<Data>> = repository.allDataDishes()
+    val allDataRecipe : LiveData<List<Data>> = repository.allDataRecipe()
+    val allDataIngredient : LiveData<List<Data>> = repository.allDataIngredient()
+    val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure()
+    val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor()
 
     fun getNSelected(): LiveData<List<Int>> = repository.getNSelected()
 

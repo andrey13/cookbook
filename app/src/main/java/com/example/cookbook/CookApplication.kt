@@ -11,12 +11,6 @@ lateinit var tabrText: Array<String>
 lateinit var tabnText: Array<String>
 lateinit var tabNSel: MutableList<Int>
 
-//var tabText = resources.getStringArray(R.array.tab_array)
-
-
-var indexTab = 0
-var dialogShow = false
-
 class CookApplication : Application() {
     private val database by lazy { CookDataBase.getDatabase(this) }
     val repository by lazy { CookRepository(database.cookDao()) }

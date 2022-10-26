@@ -15,6 +15,7 @@ fun ScreenMain(vm: CookViewModel) {
         startDestination = NavRoutes.Home.route,
     ) {
 
+        //-------------------------------------------------------------------------------
         composable(NavRoutes.AddData.route + "/{index}") { backStackEntry ->
 
             val index = backStackEntry.arguments?.getString("index")?.toInt()
@@ -26,6 +27,7 @@ fun ScreenMain(vm: CookViewModel) {
             }
         }
 
+        //-------------------------------------------------------------------------------
         composable(NavRoutes.EditData.route + "/{index}/{name}/{id}") { backStackEntry ->
 
             val index = backStackEntry.arguments?.getString("index")?.toInt()
@@ -39,6 +41,7 @@ fun ScreenMain(vm: CookViewModel) {
             }
         }
 
+        //-------------------------------------------------------------------------------
         composable(NavRoutes.Home.route) {
                 ScreenHome(nc = navController, vm)
             }

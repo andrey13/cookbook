@@ -26,16 +26,20 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.cookbook.R
 
 import com.example.cookbook.data.entities.Data
-import com.example.cookbook.indexTab
 import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.tabText
+import com.example.cookbook.ui.theme.CookbookTheme
 import com.example.cookbook.viewmodels.CookViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,36 +48,36 @@ import com.example.cookbook.viewmodels.CookViewModel
 fun ScreenHome(nc: NavController?, vm: CookViewModel) {
 
     //---номер текущей закладки в верхней строке-----------------------------------------
-    var index by remember { mutableStateOf(indexTab) }
+    var index by rememberSaveable { mutableStateOf(0) }
     val onIndexChange = { value: Int -> index = value }
 
     //---список id для выбранных записей-------------------------------------------------
-    var selectedId: List<Int> by remember { mutableStateOf(listOf()) }
+    var selectedId: List<Int> by rememberSaveable { mutableStateOf(listOf()) }
     selectedId = vm.getSelectedId(index).observeAsState(listOf()).value
 
     //---количество выбранных записей----------------------------------------------------
-    var numerSelected by remember { mutableStateOf(0) }
+    var numerSelected by rememberSaveable { mutableStateOf(0) }
     numerSelected = vm.numerSelected(index).observeAsState(0).value
 
-//    var tabNSelected by remember { mutableStateOf(listOf(0, 0, 0, 0, 0, 0)) }
+//    var tabNSelected by rememberSaveable { mutableStateOf(listOf(0, 0, 0, 0, 0, 0)) }
 //    tabNSelected = vm.getNSelected().observeAsState(listOf(0, 0, 0, 0, 0, 0)).value
 
-    var nSelTag by remember { mutableStateOf(0) }
+    var nSelTag by rememberSaveable { mutableStateOf(0) }
     nSelTag = vm.getNSelTag().observeAsState(0).value
 
-    var nSelDish by remember { mutableStateOf(0) }
+    var nSelDish by rememberSaveable { mutableStateOf(0) }
     nSelDish = vm.getNSelDish().observeAsState(0).value
 
-    var nSelRecipe by remember { mutableStateOf(0) }
+    var nSelRecipe by rememberSaveable { mutableStateOf(0) }
     nSelRecipe = vm.getNSelRecipe().observeAsState(0).value
 
-    var nSelIngredient by remember { mutableStateOf(0) }
+    var nSelIngredient by rememberSaveable { mutableStateOf(0) }
     nSelIngredient = vm.getNSelIngredient().observeAsState(0).value
 
-    var nSelMeasure by remember { mutableStateOf(0) }
+    var nSelMeasure by rememberSaveable { mutableStateOf(0) }
     nSelMeasure = vm.getNSelMeasure().observeAsState(0).value
 
-    var nSelAuthor by remember { mutableStateOf(0) }
+    var nSelAuthor by rememberSaveable { mutableStateOf(0) }
     nSelAuthor = vm.getNSelAuthor().observeAsState(0).value
 
     val tabNSelected = mutableListOf(
@@ -86,7 +90,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     )
 
     //---состояние видимости диалога удаления записи-------------------------------------
-    var dialogDeleteState by remember { mutableStateOf(false) }
+    var dialogDeleteState by rememberSaveable { mutableStateOf(false) }
 
     if (dialogDeleteState) {
         DialogInform(
@@ -103,7 +107,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     }
 
     //---состояние видимости диалога добавления записей в контейнер----------------------
-    var dialogIncludeState by remember { mutableStateOf(false) }
+    var dialogIncludeState by rememberSaveable { mutableStateOf(false) }
 
     if (dialogIncludeState) {
         DialogInform(
@@ -130,7 +134,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     }
 
     //---данные для заполнения таблицы---------------------------------------------------
-    var data: List<Data> by remember {
+    var data: List<Data> by rememberSaveable {
         mutableStateOf(listOf())
     }
 
@@ -145,7 +149,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
     }
 
     //-----------------------------------------------------------------------------------
-//    var dataSelected: Any by remember {
+//    var dataSelected: Any by rememberSaveable {
 //        mutableStateOf(Data(0, "", 0))
 //    }
 
@@ -264,6 +268,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
 }
 
 // строка с закладками ------------------------------------------------------------------
+@SuppressLint("ResourceType")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Header(
@@ -271,7 +276,9 @@ fun Header(
     tabNSelected: List<Int>,
     onIndexChange: (Int) -> Unit
 ) {
-    val selectedIndex = remember { mutableStateOf(index) }
+    val selectedIndex = rememberSaveable { mutableStateOf(index) }
+
+    val tabText = stringArrayResource(R.array.tab_array)
 
     ScrollableTabRow(
         selectedTabIndex = selectedIndex.value,
@@ -290,7 +297,7 @@ fun Header(
                 onClick = {
                     if (selectedIndex.value != index) {
                         selectedIndex.value = index
-                        indexTab = index
+                        //indexTab = index
                         onIndexChange(index)
                     }
                 },
@@ -437,7 +444,7 @@ fun DataRow(
 }
 
 
-// PREVIEW UI----------------------------------------------------------------------------
+//PREVIEW UI----------------------------------------------------------------------------
 //@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 //@Preview(showBackground = true)
 //@Composable
