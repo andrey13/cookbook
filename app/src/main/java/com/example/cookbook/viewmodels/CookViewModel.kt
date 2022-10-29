@@ -1,38 +1,36 @@
 package com.example.cookbook.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.example.cookbook.data.CookRepository
 import com.example.cookbook.data.entities.Data
 
 class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
-    val allDataTag : LiveData<List<Data>> = repository.allDataTag()
-    val allDataDish: LiveData<List<Data>> = repository.allDataDishes()
-    val allDataRecipe : LiveData<List<Data>> = repository.allDataRecipe()
-    val allDataIngredient : LiveData<List<Data>> = repository.allDataIngredient()
-    val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure()
-    val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor()
+    val allDataTag : LiveData<List<Data>> = repository.allDataTag.asLiveData()
+    val allDataDish: LiveData<List<Data>> = repository.allDataDish.asLiveData()
+    val allDataRecipe : LiveData<List<Data>> = repository.allDataRecipe.asLiveData()
+    val allDataIngredient : LiveData<List<Data>> = repository.allDataIngredient.asLiveData()
+    val allDataMeasure : LiveData<List<Data>> = repository.allDataMeasure.asLiveData()
+    val allDataAuthor : LiveData<List<Data>> = repository.allDataAuthor.asLiveData()
 
     fun getNSelected(): LiveData<List<Int>> = repository.getNSelected()
 
-    fun getNSelTag(): LiveData<Int> = repository.getNSelTag()
-    fun getNSelDish(): LiveData<Int> = repository.getNSelDish()
-    fun getNSelRecipe(): LiveData<Int> = repository.getNSelRecipe()
-    fun getNSelIngredient(): LiveData<Int> = repository.getNSelIngredient()
-    fun getNSelMeasure(): LiveData<Int> = repository.getNSelMeasure()
-    fun getNSelAuthor(): LiveData<Int> = repository.getNSelAuthor()
+    fun getNSelTag(): LiveData<Int> = repository.getNSelTag().asLiveData()
+    fun getNSelDish(): LiveData<Int> = repository.getNSelDish().asLiveData()
+    fun getNSelRecipe(): LiveData<Int> = repository.getNSelRecipe().asLiveData()
+    fun getNSelIngredient(): LiveData<Int> = repository.getNSelIngredient().asLiveData()
+    fun getNSelMeasure(): LiveData<Int> = repository.getNSelMeasure().asLiveData()
+    fun getNSelAuthor(): LiveData<Int> = repository.getNSelAuthor().asLiveData()
 
     fun setData(id: Int, name: String, index: Int) {
         Log.i("--==>", "setData id = $id, name = $name, index = $index")
         repository.setData(id, name, index)
     }
 
-    fun getSelectedId(index: Int): LiveData<List<Int>> = repository.getSelectedId(index)
+    fun getSelectedId(index: Int): LiveData<List<Int>> = repository.getSelectedId(index).asLiveData()
 
-    fun numerSelected(index: Int): LiveData<Int> = repository.numerSelected(index)
+    fun numerSelected(index: Int): LiveData<Int> = repository.numerSelected(index).asLiveData()
 
     fun insertTag(name: String) {
         repository.insertTag(name)

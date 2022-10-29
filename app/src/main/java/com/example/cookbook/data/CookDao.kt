@@ -1,13 +1,13 @@
 package com.example.cookbook.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.cookbook.data.entities.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CookDao {
 
-    //---SELECT *  FROM <> WHERE id = :id  --> LiveData<Data> ---------------------------
+    //---SELECT *  FROM <> WHERE id = :id  --> Flow<Data> ---------------------------
 
     @Query("SELECT * FROM tag WHERE id = :id")
     suspend fun getDataByIdTag(id: Int): Tag
@@ -28,19 +28,18 @@ interface CookDao {
     suspend fun getDataByIdAuthor(id: Int): Author
 
     //---TAG-----------------------------------------------------------------------------
-
-
+    
     @Query("SELECT id, name, selected  FROM tag ORDER BY name")
-    fun getDataTag(): LiveData<List<Data>>
+    fun getDataTag(): Flow<List<Data>>
 
     @Query("UPDATE tag SET name = :name WHERE id = :id")
     suspend fun setDataTag(id: Int, name: String)
 
     @Query("SELECT id FROM tag WHERE selected = 1")
-    fun getSelectedIdTag(): LiveData<List<Int>>
+    fun getSelectedIdTag(): Flow<List<Int>>
 
     @Query("SELECT * FROM tag")
-    fun getAllTag(): LiveData<List<Tag>>
+    fun getAllTag(): Flow<List<Tag>>
 
     @Query("INSERT INTO tag (name) VALUES (:name)")
     suspend fun insertTag(name: String)
@@ -58,23 +57,23 @@ interface CookDao {
     suspend fun selectedOnTag(id: Int)
 
     @Query("SELECT COUNT() FROM tag WHERE selected = 1")
-    fun numerSelTag(): LiveData<Int>
+    fun numerSelTag(): Flow<Int>
 
     @Query("SELECT COUNT() FROM tag WHERE selected = 1")
     suspend fun numerSelectedTag(): Int
 
     //---DISH----------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM dish ORDER BY name")
-    fun getDataDish(): LiveData<List<Data>>
+    fun getDataDish(): Flow<List<Data>>
 
     @Query("UPDATE dish SET name = :name WHERE id = :id")
     suspend fun setDataDish(id: Int, name: String)
 
     @Query("SELECT id FROM dish WHERE selected = 1")
-    fun getSelectedIdDish(): LiveData<List<Int>>
+    fun getSelectedIdDish(): Flow<List<Int>>
 
     @Query("SELECT * FROM dish")
-    fun getAllDish(): LiveData<List<Dish>>
+    fun getAllDish(): Flow<List<Dish>>
 
     @Query("INSERT INTO dish (name) VALUES (:name)")
     suspend fun insertDish(name: String)
@@ -92,23 +91,23 @@ interface CookDao {
     suspend fun selectedOnDish(id: Int)
 
     @Query("SELECT COUNT(selected) FROM dish WHERE selected = 1")
-    fun numerSelDish():  LiveData<Int>
+    fun numerSelDish():  Flow<Int>
 
     @Query("SELECT COUNT(selected) FROM dish WHERE selected = 1")
     suspend fun numerSelectedDish():  Int
 
     //---RECIPE-------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM recipe ORDER BY name")
-    fun getDataRecipe(): LiveData<List<Data>>
+    fun getDataRecipe(): Flow<List<Data>>
 
     @Query("UPDATE recipe SET name = :name WHERE id = :id")
     suspend fun setDataRecipe(id: Int, name: String)
 
     @Query("SELECT id FROM recipe WHERE selected = 1")
-    fun getSelectedIdRecipe(): LiveData<List<Int>>
+    fun getSelectedIdRecipe(): Flow<List<Int>>
 
     @Query("SELECT * FROM recipe")
-    fun getAllRecipe(): LiveData<List<Recipe>>
+    fun getAllRecipe(): Flow<List<Recipe>>
 
     @Query("INSERT INTO recipe (name) VALUES (:name)")
     suspend fun insertRecipe(name: String)
@@ -126,23 +125,23 @@ interface CookDao {
     suspend fun selectedOnRecipe(id: Int)
 
     @Query("SELECT COUNT(selected) FROM recipe WHERE selected = 1")
-    fun numerSelRecipe():  LiveData<Int>
+    fun numerSelRecipe():  Flow<Int>
 
     @Query("SELECT COUNT(selected) FROM recipe WHERE selected = 1")
     suspend fun numerSelectedRecipe():  Int
 
     //---INGREDIENT----------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM ingredient ORDER BY name")
-    fun getDataIngredient(): LiveData<List<Data>>
+    fun getDataIngredient(): Flow<List<Data>>
 
     @Query("UPDATE ingredient SET name = :name WHERE id = :id")
     suspend fun setDataIngredient(id: Int, name: String)
 
     @Query("SELECT id FROM ingredient WHERE selected = 1")
-    fun getSelectedIdIngredient(): LiveData<List<Int>>
+    fun getSelectedIdIngredient(): Flow<List<Int>>
 
     @Query("SELECT * FROM ingredient")
-    fun getAllIngredient(): LiveData<List<Ingredient>>
+    fun getAllIngredient(): Flow<List<Ingredient>>
 
     @Query("INSERT INTO ingredient (name) VALUES (:name)")
     suspend fun insertIngredient(name: String)
@@ -160,23 +159,23 @@ interface CookDao {
     suspend fun selectedOnIngredient(id: Int)
 
     @Query("SELECT COUNT(selected) FROM ingredient WHERE selected = 1")
-    fun numerSelIngredient():  LiveData<Int>
+    fun numerSelIngredient():  Flow<Int>
 
     @Query("SELECT COUNT(selected) FROM ingredient WHERE selected = 1")
     suspend fun numerSelectedIngredient():  Int
 
     //---MEASURE-------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM measure ORDER BY name")
-    fun getDataMeasure(): LiveData<List<Data>>
+    fun getDataMeasure(): Flow<List<Data>>
 
     @Query("UPDATE measure SET name = :name WHERE id = :id")
     suspend fun setDataMeasure(id: Int, name: String)
 
     @Query("SELECT id FROM measure WHERE selected = 1")
-    fun getSelectedIdMeasure(): LiveData<List<Int>>
+    fun getSelectedIdMeasure(): Flow<List<Int>>
 
     @Query("SELECT * FROM measure")
-    fun getAllMeasure(): LiveData<List<Measure>>
+    fun getAllMeasure(): Flow<List<Measure>>
 
     @Query("INSERT INTO measure (name) VALUES (:name)")
     suspend fun insertMeasure(name: String)
@@ -194,23 +193,23 @@ interface CookDao {
     suspend fun selectedOnMeasure(id: Int)
 
     @Query("SELECT COUNT(selected) FROM measure WHERE selected = 1")
-    fun numerSelMeasure():  LiveData<Int>
+    fun numerSelMeasure():  Flow<Int>
 
     @Query("SELECT COUNT(selected) FROM measure WHERE selected = 1")
     suspend fun numerSelectedMeasure():  Int
 
     //---AUTHOR--------------------------------------------------------------------------
     @Query("SELECT id, name, selected  FROM author ORDER BY name")
-    fun getDataAuthor(): LiveData<List<Data>>
+    fun getDataAuthor(): Flow<List<Data>>
 
     @Query("UPDATE author SET name = :name WHERE id = :id")
     suspend fun setDataAuthor(id: Int, name: String)
 
     @Query("SELECT id FROM author WHERE selected = 1")
-    fun getSelectedIdAuthor(): LiveData<List<Int>>
+    fun getSelectedIdAuthor(): Flow<List<Int>>
 
     @Query("SELECT * FROM author")
-    fun getAllAuthor(): LiveData<List<Author>>
+    fun getAllAuthor(): Flow<List<Author>>
 
     @Query("INSERT INTO author (name) VALUES (:name)")
     suspend fun insertAuthor(name: String)
@@ -228,7 +227,7 @@ interface CookDao {
     suspend fun selectedOnAuthor(id: Int)
 
     @Query("SELECT COUNT(selected) FROM author WHERE selected = 1")
-    fun numerSelAuthor():  LiveData<Int>
+    fun numerSelAuthor():  Flow<Int>
 
     @Query("SELECT COUNT(selected) FROM author WHERE selected = 1")
     suspend fun numerSelectedAuthor():  Int
