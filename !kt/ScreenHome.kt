@@ -233,7 +233,7 @@ fun ScreenHome(nc: NavController?, vm: CookViewModel) {
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp)
                         .clickable {
-                            //vm.liveData2.setValue(999)
+                            vm.liveData2.setValue(999)
                         }
                 )
             }

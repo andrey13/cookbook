@@ -9,6 +9,10 @@ import com.example.cookbook.data.entities.Data
 
 class CookViewModel(private val repository: CookRepository) : ViewModel() {
 
+    val liveData1 = repository.liveData1
+    val liveData2 = repository.liveData2
+    val liveData3 = repository.liveData3
+
     val allDataTag : LiveData<List<Data>> = repository.getDataTag().asLiveData()
     val allDataDish: LiveData<List<Data>> = repository.getDataDish().asLiveData()
     val allDataRecipe : LiveData<List<Data>> = repository.getDataRecipe().asLiveData()

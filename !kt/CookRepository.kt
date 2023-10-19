@@ -12,6 +12,27 @@ import kotlinx.coroutines.flow.StateFlow
 class CookRepository(private val cookDao: CookDao) {
 
     //---------------------------------------------------------------------
+    val liveData1: LiveData<Int> = liveData {
+        val threadName = Thread.currentThread().name
+        var i = 0
+        while(i<10) {
+            i++
+            Log.i("--==>", "liveData1 emit ---> $i $threadName")
+            emit(i)
+        }
+    }
+    //---------------------------------------------------------------------
+    val liveData2: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+    //---------------------------------------------------------------------
+    val liveData3: LiveData<Int> = liveData {
+        emitSource(liveData1)
+    }
+
+
+    //---------------------------------------------------------------------
     fun getDataTag(): Flow<List<Data>> = cookDao.getDataTag()
     fun getDataDish(): Flow<List<Data>> = cookDao.getDataDish()
     fun getDataRecipe(): Flow<List<Data>> = cookDao.getDataRecipe()

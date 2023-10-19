@@ -37,17 +37,17 @@ class MainActivity : ComponentActivity() {
                         CookViewModelFactory(repo)
                     )
 
-//                    viewModel.liveData1.observe(this) { value ->
-//                        Log.i("--==>", "LiveDate1 Observe <--- $value")
-//                    }
-//
-//                    viewModel.liveData1.observe(this) { value ->
-//                        Log.i("--==>", "LiveDate2 Observe <--- $value")
-//                    }
-//
-//                    viewModel.liveData1.observe(this) { value ->
-//                        Log.i("--==>", "LiveData3 Observe <--- $value")
-//                    }
+                    viewModel.liveData1.observe(this) { value ->
+                        Log.i("--==>", "LiveDate1 Observe <--- $value")
+                    }
+
+                    viewModel.liveData1.observe(this) { value ->
+                        Log.i("--==>", "LiveDate2 Observe <--- $value")
+                    }
+
+                    viewModel.liveData1.observe(this) { value ->
+                        Log.i("--==>", "LiveData3 Observe <--- $value")
+                    }
 
 //                    viewModel.liveData3.observe(this) { value ->
 //                        Log.i("--==>", "LiveData3 Observe <--- $value")
