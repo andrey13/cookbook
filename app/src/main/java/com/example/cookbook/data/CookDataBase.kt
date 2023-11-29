@@ -1,9 +1,7 @@
 package com.example.cookbook.data
 
 import android.content.Context
-import android.util.Log
 import androidx.room.*
-import androidx.room.migration.AutoMigrationSpec
 import com.example.cookbook.data.entities.*
 import com.example.cookbook.data.migrations.Migration1To2
 import com.example.cookbook.data.migrations.Migration2To3
@@ -22,7 +20,7 @@ import com.example.cookbook.data.migrations.Migration2To3
         (R_I::class),
         (R_S::class)
     ],
-    version = 3,
+    version = 1,
 //    autoMigrations = [
 //        AutoMigration(
 //            from = 1,
@@ -55,9 +53,9 @@ abstract class CookDataBase : RoomDatabase() {
                         CookDataBase::class.java,
                         "cook_database"
                     )
-                        //.fallbackToDestructiveMigration()
-                        .addMigrations(MIGRATION_1_TO_2)
-                        .addMigrations(MIGRATION_2_TO_3)
+//                        .fallbackToDestructiveMigration()
+//                        .addMigrations(MIGRATION_1_TO_2)
+//                        .addMigrations(MIGRATION_2_TO_3)
                         .build()
 
                     //Log.i("--==>", "instance = $instance")

@@ -1,21 +1,33 @@
-package com.example.cookbook.presentation.composables
+package com.example.cookbook.presentation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cookbook.presentation.NavRoutes
+import com.example.cookbook.presentation.composables.ScreenEditData
+import com.example.cookbook.presentation.composables.ScreenHome
+import com.example.cookbook.presentation.composables.Splash
 import com.example.cookbook.viewmodels.CookViewModel
 
 @Composable
-fun ScreenMain(vm: CookViewModel) {
+fun NavGraph(vm: CookViewModel = hiltViewModel()) {
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Home.route,
+        startDestination = NavRoutes.Splash.route,
     ) {
+        //-------------------------------------------------------------------------------
+        composable(NavRoutes.Splash.route) {
+            Splash(nc = navController)
+        }
+
+        //-------------------------------------------------------------------------------
+        composable(NavRoutes.Home.route) {
+            ScreenHome(nc = navController, vm)
+        }
 
         //-------------------------------------------------------------------------------
         composable(NavRoutes.AddData.route + "/{index}") { backStackEntry ->
@@ -42,11 +54,6 @@ fun ScreenMain(vm: CookViewModel) {
                 ScreenEditData(nc = navController, vm, 0, "", "EDIT")
             }
         }
-
-        //-------------------------------------------------------------------------------
-        composable(NavRoutes.Home.route) {
-                ScreenHome(nc = navController, vm)
-            }
 
     }
 }

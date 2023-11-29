@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import com.example.cookbook.data.CookRepository
 import com.example.cookbook.data.entities.Data
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CookViewModel(private val repository: CookRepository) : ViewModel() {
+@HiltViewModel
+class CookViewModel @Inject constructor (private val repository: CookRepository) : ViewModel() {
 
     val allDataTag : LiveData<List<Data>> = repository.getDataTag().asLiveData()
     val allDataDish: LiveData<List<Data>> = repository.getDataDish().asLiveData()

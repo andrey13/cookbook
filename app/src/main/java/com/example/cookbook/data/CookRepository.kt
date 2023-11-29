@@ -3,13 +3,12 @@ package com.example.cookbook.data
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import com.example.cookbook.data.entities.Data
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class CookRepository(private val cookDao: CookDao) {
+class CookRepository @Inject constructor (private val cookDao: CookDao) {
 
     //---------------------------------------------------------------------
     fun getDataTag(): Flow<List<Data>> = cookDao.getDataTag()
