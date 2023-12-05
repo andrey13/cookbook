@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cookbook.presentation.composables.ScrEditData
 import com.example.cookbook.presentation.composables.ScrHome
-import com.example.cookbook.presentation.composables.ScrList
 import com.example.cookbook.presentation.composables.ScrSplash
 import com.example.cookbook.presentation.composables.ScrTest
 import com.example.cookbook.viewmodels.CookViewModel
