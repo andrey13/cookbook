@@ -26,13 +26,36 @@ class CookViewModel @Inject constructor (private val repository: CookRepository)
     fun getNSelMeasure(): LiveData<Int> = repository.getNSelMeasure().asLiveData()
     fun getNSelAuthor(): LiveData<Int> = repository.getNSelAuthor().asLiveData()
 
-    fun setData(id: Int, name: String, iTab: Int) {
-        repository.setData(id, name, iTab)
+    fun setData(
+        mode: String,
+        id: Int,
+        text: String,
+        iTab: Int
+    ) {
+        when (mode) {
+            "NEW" -> if (text != "") {
+                when (iTab) {
+                    0 -> insertTag(text)
+                    1 -> insertDish(text)
+                    2 -> insertRecipe(text)
+                    3 -> insertIngredient(text)
+                    4 -> insertMeasure(text)
+                    5 -> insertAuthor(text)
+                    else -> {}
+                }
+            }
+
+            "EDIT" -> if (text != "") {
+                repository.setData(id, text, iTab)
+            }
+
+            else -> {}
+        }
     }
 
     fun getSelectedId(iTab: Int): LiveData<List<Int>> = repository.getSelectedId(iTab).asLiveData()
 
-    fun numerSelected(iTab: Int): LiveData<Int> = repository.numerSelected(iTab).asLiveData()
+    fun numberSelected(iTab: Int): LiveData<Int> = repository.numerSelected(iTab).asLiveData()
 
     fun insertTag(name: String) {
         repository.insertTag(name)

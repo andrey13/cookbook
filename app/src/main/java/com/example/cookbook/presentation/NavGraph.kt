@@ -5,7 +5,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cookbook.presentation.composables.ScrEditData
 import com.example.cookbook.presentation.composables.ScrHome
 import com.example.cookbook.presentation.composables.ScrSplash
 import com.example.cookbook.presentation.composables.ScrTest
@@ -38,54 +37,54 @@ fun NavGraph(vm: CookViewModel = hiltViewModel()) {
         }
 
         //-------------------------------------------------------------------------------
-        composable(NavRoutes.AddData.route + "/{index}") { backStackEntry ->
-
-            val index = backStackEntry.arguments?.getString("index")?.toInt()
-
-            if (index != null) {
-                ScrEditData(
-                    nc = navController,
-                    vm,
-                    index,
-                    "",
-                    "NEW")
-            } else {
-                ScrEditData(
-                    nc = navController,
-                    vm,
-                    0,
-                    "",
-                    "NEW"
-                )
-            }
-        }
+//        composable(NavRoutes.AddData.route + "/{index}") { backStackEntry ->
+//
+//            val index = backStackEntry.arguments?.getString("index")?.toInt()
+//
+//            if (index != null) {
+//                ScrEditData(
+//                    nc = navController,
+//                    vm,
+//                    index,
+//                    "",
+//                    "NEW")
+//            } else {
+//                ScrEditData(
+//                    nc = navController,
+//                    vm,
+//                    0,
+//                    "",
+//                    "NEW"
+//                )
+//            }
+//        }
 
         //-------------------------------------------------------------------------------
-        composable(NavRoutes.EditData.route + "/{index}/{name}/{id}") { backStackEntry ->
-
-            val index = backStackEntry.arguments?.getString("index")?.toInt()
-            val name = backStackEntry.arguments?.getString("name") ?: "?"
-            val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
-
-            if (index != null) {
-                ScrEditData(
-                    nc = navController,
-                    vm,
-                    index,
-                    name,
-                    "EDIT",
-                    id = id
-                )
-            } else {
-                ScrEditData(
-                    nc = navController,
-                    vm,
-                    0,
-                    "",
-                    "EDIT"
-                )
-            }
-        }
+//        composable(NavRoutes.EditData.route + "/{index}/{name}/{id}") { backStackEntry ->
+//
+//            val index = backStackEntry.arguments?.getString("index")?.toInt()
+//            val name = backStackEntry.arguments?.getString("name") ?: "?"
+//            val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
+//
+//            if (index != null) {
+//                ScrEditData(
+//                    nc = navController,
+//                    vm,
+//                    index,
+//                    name,
+//                    "EDIT",
+//                    id = id
+//                )
+//            } else {
+//                ScrEditData(
+//                    nc = navController,
+//                    vm,
+//                    0,
+//                    "",
+//                    "EDIT"
+//                )
+//            }
+//        }
 
     }
 }

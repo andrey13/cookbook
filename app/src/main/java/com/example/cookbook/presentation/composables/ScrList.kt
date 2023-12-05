@@ -21,27 +21,24 @@ import androidx.compose.material.icons.filled.Menu
 //import androidx.compose.material.FabPosition
 import androidx.compose.material3.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import com.example.cookbook.R
 import com.example.cookbook.data.entities.Data
-import com.example.cookbook.presentation.NavRoutes
 import com.example.cookbook.viewmodels.CookViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-///////////////////////////////////////////////////////////////////////////////
-// iTab - номер текущей закладки
-// selectedId - список id выбранных записей
-// numerSelected - количество выбранных записей
-// dialogDeleteState - состояние видимости диалога удаления записи
-// dialogIncludeState - состояние видимости диалога добавления записей в контейнер
-// onSetDialogDeleteState - лямбда изменяющая состояние видимости диалога удаления записи
-// onSetDialogIncludeState - лямбда изменяющая состояние видимости диалога добавления записи
-///////////////////////////////////////////////////////////////////////////////
-
+/******************************************************************************
+ * iTab - номер текущей закладки
+ * selectedId - список id выбранных записей
+ * numberSelected - количество выбранных записей
+ * dialogDeleteState - состояние видимости диалога удаления записи
+ * dialogIncludeState - состояние видимости диалога добавления записей в контейнер
+ * onSetDialogDeleteState - лямбда изменяющая состояние видимости диалога удаления записи
+ * onSetDialogIncludeState - лямбда изменяющая состояние видимости диалога добавления записи
+ ******************************************************************************/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
@@ -52,15 +49,27 @@ fun ScrList(
     scope: CoroutineScope,
     drawerState: DrawerState
 ) {
+    //-------------режим редактирования----------------------------------------
+    var modeEdit by rememberSaveable { mutableStateOf("NEW") }
+    val onModeEdit = { value: String -> modeEdit = value }
 
+    //-------------id первой из выбранных записей------------------------------
+    var selectedIndex by rememberSaveable { mutableStateOf(0) }
+    val onSelectedIndexChange = { value: Int -> selectedIndex = value }
+
+    //-------------id значение поля name из выбранных записей------------------
+    var selectedName  by rememberSaveable { mutableStateOf("") }
+    val onSelectedNameChange = { value: String -> selectedName = value }
+
+    //-------------номер закладки----------------------------------------------
     var iTab by rememberSaveable { mutableStateOf(0) }
     val onIndexChange = { value: Int -> iTab = value }
 
     var selectedId: List<Int> by rememberSaveable { mutableStateOf(listOf()) }
     selectedId = vm.getSelectedId(iTab).observeAsState(listOf()).value
 
-    var numerSelected by rememberSaveable { mutableStateOf(0) }
-    numerSelected = vm.numerSelected(iTab).observeAsState(0).value
+    var numberSelected by rememberSaveable { mutableStateOf(0) }
+    numberSelected = vm.numberSelected(iTab).observeAsState(0).value
 
     var nSelTag by rememberSaveable { mutableStateOf(0) }
     nSelTag = vm.getNSelTag().observeAsState(0).value
@@ -101,7 +110,6 @@ fun ScrList(
 
     //-----------------------------------------------------------------------------------
         Scaffold(
-            //---верхняя строка--------------------------------------------------------------
             topBar = {
                 TopAppBar(
                     title = {
@@ -144,21 +152,16 @@ fun ScrList(
                     Tabulator(vm = vm, iTab = iTab, onSetDialogIncludeState)
                 }
             },
-            //---левая шторка----------------------------------------------------------------
-//        drawerContent = {
-//            Text("Drawer title", modifier = Modifier.padding(16.dp))
-//            Divider()
-//        },
-//        drawerElevation = DrawerDefaults.Elevation,
-//        drawerShape = MaterialTheme.shapes.large,
 
-            //---плавающая кнопка добавления записи------------------------------------------
             floatingActionButtonPosition = FabPosition.End,
 
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = {
 //                        nc?.navigate(NavRoutes.AddData.route + "/$iTab")
+                        onModeEdit("NEW")
+                        onSelectedIndexChange(0)
+                        onSelectedNameChange("")
                         onSetDialogEditState(true)
                     },
                     content = {
@@ -169,24 +172,26 @@ fun ScrList(
                     }
                 )
             },
-            //isFloatingActionButtonDocked = true,
 
-            //---нижняя строка---------------------------------------------------------------
             bottomBar = {
                 BottomAppBar {
                     //----------------------кнопка РЕДАКТИРОВАТЬ
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = null,
-                        tint = if (numerSelected == 1) Color.Black else Color.Gray,
+                        tint = if (numberSelected == 1) Color.Black else Color.Gray,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .clickable {
-                                if (numerSelected == 1) {
+                                if (numberSelected == 1) {
                                     val id = selectedId[0]
                                     val dataSel = vm.getDataById(id, iTab)
                                     val name = (dataSel as Data).name
-                                    nc?.navigate(NavRoutes.EditData.route + "/$iTab/$name/$id")
+                                    //nc?.navigate(NavRoutes.EditData.route + "/$iTab/$name/$id")
+                                    onModeEdit("EDIT")
+                                    onSelectedIndexChange(id)
+                                    onSelectedNameChange(name)
+                                    onSetDialogEditState(true)
                                 }
                             }
                     )
@@ -194,11 +199,11 @@ fun ScrList(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
-                        tint = if (numerSelected != 0) Color.Black else Color.Gray,
+                        tint = if (numberSelected != 0) Color.Black else Color.Gray,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .clickable {
-                                if (numerSelected != 0) onSetDialogDeleteState(true)
+                                if (numberSelected != 0) onSetDialogDeleteState(true)
                             }
                     )
 
@@ -215,7 +220,7 @@ fun ScrList(
                             modifier = Modifier
                                 .padding(start = 10.dp, end = 10.dp)
                                 .clickable {
-                                    if (numerSelected != 0) onSetDialogIncludeState(true)
+                                    if (numberSelected != 0) onSetDialogIncludeState(true)
                                 }
                         )
                     }
@@ -224,7 +229,7 @@ fun ScrList(
                         //imageVector = Icons.Default.Check,
                         painter = painterResource(id = R.drawable.ic_baseline_filter_alt_24),
                         contentDescription = null,
-                        tint = if (numerSelected != 0) Color.Black else Color.Gray,
+                        tint = if (numberSelected != 0) Color.Black else Color.Gray,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .clickable {
@@ -239,7 +244,7 @@ fun ScrList(
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .clickable {
-                                onSetDialogTest(true)
+                                //onSetDialogTest(true)
                             }
                     )
                 }
@@ -282,8 +287,9 @@ fun ScrList(
         ScrEdit(
             vm,
             iTab,
-            "",
-            "NEW",
+            selectedName,
+            modeEdit,
+            id = selectedIndex,
             onCancel = {
                 dialogEditState = false
             },

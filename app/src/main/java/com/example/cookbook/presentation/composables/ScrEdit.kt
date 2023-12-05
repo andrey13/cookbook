@@ -94,31 +94,10 @@ fun ScrEdit(
                     //-----------------------------------OK
                     Button(
                         onClick = {
-                            when (mode) {
-                                "NEW" -> if (text != "") {
-                                    when (index) {
-                                        0 -> vm?.insertTag(text)
-                                        1 -> vm?.insertDish(text)
-                                        2 -> vm?.insertRecipe(text)
-                                        3 -> vm?.insertIngredient(text)
-                                        4 -> vm?.insertMeasure(text)
-                                        5 -> vm?.insertAuthor(text)
-                                        else -> {}
-                                    }
-//                                    nc?.popBackStack(NavRoutes.Home.route, inclusive = false)
-                                }
-
-                                "EDIT" -> if (text != "") {
-                                    vm?.setData(id, text, index)
-//                                    nc?.popBackStack(NavRoutes.Home.route, inclusive = false)
-                                }
-
-                                else -> {}
-                            }
+                            vm?.setData(mode, id, text, index)
+                            if (mode == "EDIT") onCancel()
                         },
-                        modifier = Modifier
-                            .width(100.dp)
-
+                        modifier = Modifier.width(100.dp)
                     ) {
                         Text("OK")
                     }
@@ -144,7 +123,6 @@ fun ScrEdit(
 fun PreviewScrEdit() {
     CookbookTheme {
         ScrEdit(
-//            null,
             null,
             1,
             "ABC",

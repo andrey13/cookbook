@@ -42,7 +42,7 @@ fun ScrSplash(nc: NavController?) {
                 scale.animateTo(
                     targetValue = 2.0f,
                     animationSpec = tween(
-                        durationMillis = 2500,
+                        durationMillis = 1500,
                         easing = {
                             OvershootInterpolator(2f).getInterpolation((it))
                         }
@@ -54,7 +54,7 @@ fun ScrSplash(nc: NavController?) {
                 angle.animateTo(
                     targetValue = 360f,
                     animationSpec = tween(
-                        durationMillis = 2500,
+                        durationMillis = 1000,
                         easing = {
                             OvershootInterpolator(1f).getInterpolation((it))
                         }
@@ -65,15 +65,14 @@ fun ScrSplash(nc: NavController?) {
 
         job1.join()
 
-        delay(500L)
-
+        delay(0L)
 
         val job2 = launch {
             launch {
                 scale.animateTo(
                     targetValue = 1.0f,
                     animationSpec = tween(
-                        durationMillis = 1000,
+                        durationMillis = 200,
 //                        easing = {
 //                            OvershootInterpolator(1f).getInterpolation((it))
 //                        }
@@ -81,10 +80,10 @@ fun ScrSplash(nc: NavController?) {
                 )
             }
             launch {
-                offsetX.animateTo(screenWidth.value,  animationSpec = tween(durationMillis = 1000))
+                offsetX.animateTo(screenWidth.value,  animationSpec = tween(durationMillis = 200))
             }
             launch {
-                offsetY.animateTo(screenHeight.value, animationSpec = tween(durationMillis = 1000))
+                offsetY.animateTo(screenHeight.value, animationSpec = tween(durationMillis = 200))
             }
         }
 
