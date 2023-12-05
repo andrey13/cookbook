@@ -5,9 +5,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.cookbook.presentation.composables.ScreenEditData
-import com.example.cookbook.presentation.composables.ScreenHome
-import com.example.cookbook.presentation.composables.Splash
+import com.example.cookbook.presentation.composables.ScrEditData
+import com.example.cookbook.presentation.composables.ScrHome
+import com.example.cookbook.presentation.composables.ScrList
+import com.example.cookbook.presentation.composables.ScrSplash
+import com.example.cookbook.presentation.composables.ScrTest
 import com.example.cookbook.viewmodels.CookViewModel
 
 @Composable
@@ -17,16 +19,23 @@ fun NavGraph(vm: CookViewModel = hiltViewModel()) {
 
     NavHost(
         navController = navController,
+//        startDestination = NavRoutes.Test.route,
+//        startDestination = NavRoutes.Splash.route,
         startDestination = NavRoutes.Splash.route,
     ) {
         //-------------------------------------------------------------------------------
+        composable(NavRoutes.Test.route) {
+            ScrTest(nc = navController)
+        }
+
+        //-------------------------------------------------------------------------------
         composable(NavRoutes.Splash.route) {
-            Splash(nc = navController)
+            ScrSplash(nc = navController)
         }
 
         //-------------------------------------------------------------------------------
         composable(NavRoutes.Home.route) {
-            ScreenHome(nc = navController, vm)
+            ScrHome(nc = navController, vm)
         }
 
         //-------------------------------------------------------------------------------
@@ -35,9 +44,20 @@ fun NavGraph(vm: CookViewModel = hiltViewModel()) {
             val index = backStackEntry.arguments?.getString("index")?.toInt()
 
             if (index != null) {
-                ScreenEditData(nc = navController, vm, index, "", "NEW")
+                ScrEditData(
+                    nc = navController,
+                    vm,
+                    index,
+                    "",
+                    "NEW")
             } else {
-                ScreenEditData(nc = navController, vm, 0, "", "NEW")
+                ScrEditData(
+                    nc = navController,
+                    vm,
+                    0,
+                    "",
+                    "NEW"
+                )
             }
         }
 
@@ -49,9 +69,22 @@ fun NavGraph(vm: CookViewModel = hiltViewModel()) {
             val id = backStackEntry.arguments?.getString("id")?.toInt() ?: 0
 
             if (index != null) {
-                ScreenEditData(nc = navController, vm, index, name, "EDIT", id)
+                ScrEditData(
+                    nc = navController,
+                    vm,
+                    index,
+                    name,
+                    "EDIT",
+                    id = id
+                )
             } else {
-                ScreenEditData(nc = navController, vm, 0, "", "EDIT")
+                ScrEditData(
+                    nc = navController,
+                    vm,
+                    0,
+                    "",
+                    "EDIT"
+                )
             }
         }
 
